@@ -5,17 +5,21 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0f2b5b, #1e4db7);
-        }
+             margin: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0f2b5b, #1e4db7);
+}
 
-        .login-wrapper {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+.login-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
         .login-card {
             background: #ffffff;
@@ -92,7 +96,7 @@
 
 <script>
 const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "Staffnexa@123";
+const ADMIN_PASSWORD = "Staffnexa$5000";
 
 function login() {
     const user = document.getElementById("username").value;
