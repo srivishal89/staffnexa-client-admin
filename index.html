@@ -1,44 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Client Enquiries - Admin</title>
+    <title>Staffnexa — Client Admin</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .login-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2b5b, #1e4db7);
+        }
+
+        .login-wrapper {
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
         }
 
-        .login-box {
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            width: 350px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        .login-card {
+            background: #ffffff;
+            padding: 40px;
+            width: 380px;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            text-align: center;
         }
 
-        .login-box h3 {
+        .login-card img {
+            width: 70px;
             margin-bottom: 20px;
         }
 
-        .login-box input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
+        .login-card h2 {
+            margin-bottom: 25px;
+            color: #1e4db7;
         }
 
-        .login-box button {
+        .login-card input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 12px;
             background: #1e4db7;
             color: white;
             border: none;
+            border-radius: 6px;
+            font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-card button:hover {
+            background: #163b8c;
+        }
+
+        .error-msg {
+            color: red;
+            margin-top: 10px;
+            display: none;
         }
 
         .hidden {
@@ -46,36 +72,36 @@
         }
     </style>
 </head>
+
 <body>
 
-<div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-        <h3>Admin Login</h3>
+<div class="login-wrapper" id="loginWrapper">
+    <div class="login-card">
+        <img src="logo.png" alt="Staffnexa Logo">
+        <h2>Client Admin Login</h2>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
         <button onclick="login()">Login</button>
-        <p id="loginError" style="color:red; display:none;">Invalid credentials</p>
+        <p class="error-msg" id="loginError">Invalid credentials</p>
     </div>
 </div>
 
-<header class="admin-header">
-    <h2>Staffnexa Admin — Client Enquiries</h2>
-</header>
-
-<div class="admin-container">
-    <!-- your existing table layout remains here -->
+<div id="adminPanel" class="hidden">
+    <!-- YOUR EXISTING ADMIN LAYOUT HERE -->
 </div>
 
 <script>
 const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "Staffnexa$5000";
+const ADMIN_PASSWORD = "Staffnexa@123";
 
 function login() {
     const user = document.getElementById("username").value;
     const pass = document.getElementById("password").value;
 
     if (user === ADMIN_USERNAME && pass === ADMIN_PASSWORD) {
-        document.getElementById("loginOverlay").classList.add("hidden");
+        document.getElementById("loginWrapper").style.display = "none";
+        document.getElementById("adminPanel").classList.remove("hidden");
+        document.body.style.background = "#f4f6f9";
     } else {
         document.getElementById("loginError").style.display = "block";
     }
