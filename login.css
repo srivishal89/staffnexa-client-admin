@@ -7,48 +7,66 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
-.overlay {
-  position: fixed;
+/* Dark blue overlay */
+body::before {
+  content: "";
+  position: absolute;
   inset: 0;
-  background: rgba(30, 50, 120, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(20, 45, 110, 0.65);
+  backdrop-filter: blur(3px);
 }
 
+/* Card */
 .login-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 40px;
-  width: 380px;
-  border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  width: 420px;
+  background: rgba(255, 255, 255, 0.97);
+  padding: 45px 40px;
+  border-radius: 14px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
   text-align: center;
   z-index: 2;
 }
 
+/* Logo */
 .login-logo {
-  width: 80px;
-  margin-bottom: 15px;
+  width: 85px;
+  margin-bottom: 18px;
 }
 
+/* Title */
 .login-card h2 {
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+  font-size: 22px;
+  font-weight: 600;
   color: #243a7a;
 }
 
+/* Inputs */
 .login-card input {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 13px 14px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  border: 1px solid #d0d0d0;
   font-size: 14px;
+  transition: 0.2s ease;
 }
 
+.login-card input:focus {
+  border-color: #2d4fa3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(45,79,163,0.15);
+}
+
+/* Buttons */
 .btn-group {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .btn-primary {
@@ -56,26 +74,29 @@ body {
   background: #2d4fa3;
   color: white;
   border: none;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 13px;
+  border-radius: 8px;
+  font-weight: 500;
   cursor: pointer;
-}
-
-.btn-secondary {
-  flex: 1;
-  background: #ccc;
-  border: none;
-  padding: 12px;
-  border-radius: 6px;
-  cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .btn-primary:hover {
   background: #1e3b85;
 }
 
+.btn-secondary {
+  flex: 1;
+  background: #e0e0e0;
+  border: none;
+  padding: 13px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
 .error-msg {
+  margin-top: 15px;
   color: red;
   font-size: 13px;
-  margin-top: 10px;
 }
