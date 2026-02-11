@@ -1,300 +1,222 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <title>Staffnexa — Client Admin</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staffnexa — Client Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom right, #1f3c88, #2c5cc5);
-        }
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      min-height: 100vh;
+    }
 
-        /* LOGIN */
-        .login-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    .login-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-        .login-card {
-            background: #ffffff;
-            padding: 40px;
-            width: 350px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            text-align: center;
-        }
+    .login-card {
+      background: #fff;
+      padding: 40px;
+      width: 340px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+    }
 
-        .login-card img {
-            width: 60px;
-            margin-bottom: 15px;
-        }
+    .login-card img {
+      height: 55px;
+      margin-bottom: 15px;
+    }
 
-        .login-card h2 {
-            margin-bottom: 20px;
-            color: #1f3c88;
-        }
+    .login-card h2 {
+      margin-bottom: 25px;
+      color: #1e3c72;
+    }
 
-        .login-card input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
+    .login-card input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
 
-        .login-card button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background: #2c5cc5;
-            color: white;
-            font-size: 15px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    .login-btn,
+    .cancel-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
 
-        .login-card button:hover {
-            background: #1f3c88;
-        }
+    .login-btn {
+      background: #2a5298;
+      color: white;
+    }
 
-        /* ADMIN */
-        #adminContainer {
-            display: none;
-            padding: 20px;
-            background: #f4f6fa;
-            min-height: 100vh;
-        }
+    .cancel-btn {
+      background: #ccc;
+    }
 
-        header {
-            background: #1f3c88;
-            color: white;
-            padding: 15px;
-            font-size: 18px;
-        }
+    .admin-container {
+      display: none;
+      padding: 20px;
+    }
 
-        .controls {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+    .header {
+      background: #1e3c72;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .controls input,
-        .controls select {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
 
-        .controls button {
-            padding: 8px 12px;
-            border: none;
-            background: #2c5cc5;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-        }
+    th {
+      background: #2a5298;
+      color: white;
+    }
 
-        th {
-            background: #2c5cc5;
-            color: white;
-            padding: 10px;
-            font-size: 14px;
-        }
-
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-            font-size: 13px;
-        }
-
-        tr:hover {
-            background: #f1f4fb;
-        }
-
-        .logout-btn {
-            float: right;
-            background: #e53935;
-        }
-
-        .logout-btn:hover {
-            background: #c62828;
-        }
-    </style>
+    .logout-btn {
+      background: red;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div id="loginContainer" class="login-wrapper">
-    <div class="login-card">
-        <img src="logo.png" alt="Staffnexa Logo" />
-        <h2>Client Admin Login</h2>
-        <input type="text" id="username" placeholder="Username" />
-        <input type="password" id="password" placeholder="Password" />
-        <button onclick="login()">Login</button>
-    </div>
+<div class="login-wrapper" id="loginWrapper">
+  <div class="login-card">
+    <img src="logo.png">
+    <h2>Client Admin Login</h2>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+
+    <button class="login-btn" onclick="login()">Login</button>
+    <button class="cancel-btn" onclick="cancelLogin()">Cancel</button>
+  </div>
 </div>
 
 <!-- ADMIN PANEL -->
-<div id="adminContainer">
-    <header>
-        Staffnexa Admin — Client Enquiries
-        <button class="logout-btn" onclick="logout()">Logout</button>
-    </header>
+<div class="admin-container" id="adminPanel">
 
-    <div class="controls">
-        <input type="text" id="searchInput" placeholder="Search Company" onkeyup="filterTable()" />
+  <div class="header">
+    <h3>Staffnexa Admin — Client Enquiries</h3>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 
-        <select id="roleFilter" onchange="filterTable()">
-            <option value="">All Roles</option>
-            <option>Housekeeping</option>
-            <option>Pantry</option>
-            <option>Supervisor</option>
-            <option>Telecaller</option>
-        </select>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Staff</th>
+        <th>Location</th>
+        <th>Timeline</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-        <select id="timelineFilter" onchange="filterTable()">
-            <option value="">All Timelines</option>
-            <option>Immediate</option>
-            <option>Within 7 Days</option>
-            <option>Within 15 Days</option>
-            <option>Within 30 Days</option>
-        </select>
-
-        <button onclick="exportCSV()">Export CSV</button>
-    </div>
-
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Company</th>
-                <th>Contact</th>
-                <th>Phone</th>
-                <th>Role</th>
-                <th>Staff</th>
-                <th>Location</th>
-                <th>Timeline</th>
-                <th>Quotation</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
 </div>
 
 <script>
-    const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
 
-    function login() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
+const BACKEND_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
 
-        if (username === "admin" && password === "Staffnexa$5000") {
-            document.getElementById("loginContainer").style.display = "none";
-            document.getElementById("adminContainer").style.display = "block";
-            loadData();
-        } else {
-            alert("Invalid credentials");
-        }
-    }
+function login() {
 
-    function logout() {
-        document.getElementById("adminContainer").style.display = "none";
-        document.getElementById("loginContainer").style.display = "flex";
-    }
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
 
-    async function loadData() {
-        try {
-            const res = await fetch(API_URL);
-            const data = await res.json();
+  if(user === "admin" && pass === "staffnexa123") {
 
-            const tbody = document.querySelector("#dataTable tbody");
-            tbody.innerHTML = "";
+    document.getElementById("loginWrapper").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
 
-            data.data.forEach(item => {
-                const row = `
-                    <tr>
-                        <td>${item.companyName}</td>
-                        <td>${item.contactPerson}</td>
-                        <td>${item.phone}</td>
-                        <td>${item.requirementType}</td>
-                        <td>${item.numberOfStaff}</td>
-                        <td>${item.location}</td>
-                        <td>${item.timeline}</td>
-                        <td>
-                            <select>
-                                <option>No</option>
-                                <option>Yes</option>
-                            </select>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
+    loadData();
 
-        } catch (err) {
-            alert("Failed to load data");
-        }
-    }
+  } else {
+    alert("Invalid credentials");
+  }
+}
 
-    function filterTable() {
-        const search = document.getElementById("searchInput").value.toLowerCase();
-        const role = document.getElementById("roleFilter").value;
-        const timeline = document.getElementById("timelineFilter").value;
+function cancelLogin() {
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+}
 
-        const rows = document.querySelectorAll("#dataTable tbody tr");
+function logout() {
+  document.getElementById("adminPanel").style.display = "none";
+  document.getElementById("loginWrapper").style.display = "flex";
+}
 
-        rows.forEach(row => {
-            const company = row.cells[0].textContent.toLowerCase();
-            const roleText = row.cells[3].textContent;
-            const timelineText = row.cells[6].textContent;
+async function loadData() {
 
-            if (
-                company.includes(search) &&
-                (role === "" || roleText === role) &&
-                (timeline === "" || timelineText === timeline)
-            ) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-        });
-    }
+  try {
 
-    function exportCSV() {
-        let csv = [];
-        const rows = document.querySelectorAll("table tr");
+    const response = await fetch(BACKEND_URL);
+    const result = await response.json();
 
-        rows.forEach(row => {
-            const cols = row.querySelectorAll("td, th");
-            const rowData = [];
-            cols.forEach(col => rowData.push(col.innerText));
-            csv.push(rowData.join(","));
-        });
+    if(!result.success) throw new Error();
 
-        const blob = new Blob([csv.join("\n")], { type: "text/csv" });
-        const url = window.URL.createObjectURL(blob);
+    const tableBody = document.querySelector("#dataTable tbody");
+    tableBody.innerHTML = "";
 
-        const a = document.createElement("a");
-        a.setAttribute("hidden", "");
-        a.setAttribute("href", url);
-        a.setAttribute("download", "client-enquiries.csv");
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
+    result.data.forEach(item => {
+      const row = `
+        <tr>
+          <td>${item.companyName}</td>
+          <td>${item.contactPerson}</td>
+          <td>${item.phone}</td>
+          <td>${item.requirementType}</td>
+          <td>${item.numberOfStaff}</td>
+          <td>${item.location}</td>
+          <td>${item.timeline}</td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+
+  } catch (error) {
+    alert("Failed to load data");
+  }
+
+}
+
 </script>
 
 </body>
