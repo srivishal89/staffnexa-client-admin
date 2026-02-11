@@ -1,45 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Staffnexa — Client Enquiries</title>
+  <title>Staffnexa — Client Admin</title>
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<div class="container">
-  <h1>Staffnexa — Client Enquiries</h1>
-
-  <div class="controls">
-    <input type="text" id="searchInput" placeholder="Search company..." />
-    
-    <select id="roleFilter">
-      <option value="">All Roles</option>
-    </select>
-
-    <select id="timelineFilter">
-      <option value="">All Timelines</option>
-    </select>
-
-    <button onclick="exportCSV()" class="export-btn">Export CSV</button>
-    <button onclick="logout()" class="delete-btn">Logout</button>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-wrapper">
+  <div class="login-box">
+    <h2>Client Admin Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <div class="login-buttons">
+      <button onclick="login()">Login</button>
+      <button onclick="clearLogin()" class="cancel-btn">Cancel</button>
+    </div>
+    <p id="loginError"></p>
   </div>
+</div>
 
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th>Company</th>
-        <th>Contact</th>
-        <th>Phone</th>
-        <th>Role</th>
-        <th>Staff</th>
-        <th>Location</th>
-        <th>Timeline</th>
-        <th>Quotation</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;">
+  <div class="container">
+    <h1>Staffnexa — Client Enquiries</h1>
+
+    <div class="controls">
+      <div class="left-controls">
+        <input type="text" id="searchInput" placeholder="Search company..." />
+        <select id="roleFilter"><option value="">All Roles</option></select>
+        <select id="timelineFilter"><option value="">All Timelines</option></select>
+      </div>
+
+      <div class="right-controls">
+        <button onclick="exportCSV()" class="export-btn">Export CSV</button>
+        <button onclick="deleteSelected()" class="delete-btn">Delete</button>
+      </div>
+    </div>
+
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="selectAll" onclick="toggleAll(this)" /></th>
+          <th>Company</th>
+          <th>Contact</th>
+          <th>Phone</th>
+          <th>Role</th>
+          <th>Staff</th>
+          <th>Location</th>
+          <th>Timeline</th>
+          <th>Quotation</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 </div>
 
 <script src="script.js"></script>
