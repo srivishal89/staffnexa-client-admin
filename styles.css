@@ -1,81 +1,64 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
 body {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #0f2d5c, #294a8d);
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 40px;
 }
 
-/* Login Card */
-.login-card {
-    width: 380px;
-    background: #ffffff;
-    padding: 40px 35px;
-    border-radius: 14px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    text-align: center;
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  max-width: 1200px;
+  margin: auto;
 }
 
-/* Logo */
-.login-logo {
-    width: 65px;
-    height: auto;
-    margin-bottom: 20px;
+h1 {
+  margin-bottom: 20px;
 }
 
-/* Heading */
-.login-card h2 {
-    color: #1e4fa3;
-    margin-bottom: 25px;
-    font-weight: 600;
+.controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
-/* Input Fields */
-.login-card input {
-    width: 100%;
-    padding: 12px 14px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid #dcdcdc;
-    font-size: 14px;
-    transition: 0.3s ease;
+input, select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
-.login-card input:focus {
-    border-color: #1e4fa3;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(30, 79, 163, 0.15);
+button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-/* Button */
-.login-card button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-    background-color: #1e4fa3;
-    color: white;
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.3s ease;
+.export-btn {
+  background: #4f6ef7;
+  color: white;
 }
 
-.login-card button:hover {
-    background-color: #163d80;
+.delete-btn {
+  background: #e53935;
+  color: white;
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-    .login-card {
-        width: 90%;
-        padding: 30px 20px;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #4f6ef7;
+  color: white;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
