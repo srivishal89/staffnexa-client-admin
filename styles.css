@@ -1,33 +1,30 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
   margin: 0;
-  padding: 40px;
+  font-family: Arial, sans-serif;
+  background: #f4f6fa;
 }
 
 /* LOGIN */
 .login-wrapper {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  background: linear-gradient(to right, #1e3c72, #2a5298);
 }
 
-.login-box {
+.login-card {
   background: white;
-  padding: 30px;
+  padding: 40px;
+  width: 350px;
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  width: 320px;
   text-align: center;
 }
 
-.login-box input {
+.login-card input {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
 }
 
 .login-buttons {
@@ -35,70 +32,65 @@ body {
   justify-content: space-between;
 }
 
-.cancel-btn {
-  background: #999;
-}
-
-.login-box button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  background: #4f6ef7;
+.login-buttons button {
+  width: 48%;
+  padding: 10px;
+  background: #2a5298;
   color: white;
+  border: none;
   cursor: pointer;
 }
 
-#loginError {
+.cancel-btn {
+  background: #777;
+}
+
+.error {
   color: red;
 }
 
-/* ADMIN */
+/* ADMIN PANEL */
 .container {
+  width: 90%;
+  margin: 40px auto;
   background: white;
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  max-width: 1300px;
-  margin: auto;
 }
 
-.controls {
+.header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  align-items: center;
 }
 
-.left-controls {
-  display: flex;
-  gap: 10px;
-}
-
-.right-controls {
-  display: flex;
-  gap: 10px;
-}
-
-input, select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.right-actions button {
+  margin-left: 10px;
 }
 
 .export-btn {
-  background: #4f6ef7;
+  background: #2a5298;
   color: white;
+  padding: 8px 15px;
+  border: none;
 }
 
 .delete-btn {
-  background: #e53935;
+  background: #b00020;
   color: white;
+  padding: 8px 15px;
+  border: none;
+}
+
+.filters {
+  margin: 20px 0;
+  display: flex;
+  gap: 15px;
+}
+
+.filters input,
+.filters select {
+  padding: 8px;
 }
 
 table {
@@ -107,11 +99,12 @@ table {
 }
 
 thead {
-  background: #4f6ef7;
+  background: #2a5298;
   color: white;
 }
 
 th, td {
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border: 1px solid #ddd;
+  text-align: center;
 }
