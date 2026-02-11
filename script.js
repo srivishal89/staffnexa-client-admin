@@ -1,7 +1,26 @@
 const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
-
 let allData = [];
 
+/* LOGIN */
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if (user === "admin" && pass === "Staffnexa$5000") {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+    loadData();
+  } else {
+    document.getElementById("loginError").innerText = "Invalid credentials";
+  }
+}
+
+function clearLogin() {
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+}
+
+/* LOAD DATA */
 async function loadData() {
   try {
     const res = await fetch(API_URL);
@@ -16,11 +35,12 @@ async function loadData() {
     populateFilters();
     renderTable(allData);
 
-  } catch (error) {
+  } catch (err) {
     alert("Failed to load data");
   }
 }
 
+/* TABLE */
 function renderTable(data) {
   const tbody = document.querySelector("#dataTable tbody");
   tbody.innerHTML = "";
@@ -28,6 +48,7 @@ function renderTable(data) {
   data.forEach(item => {
     const row = `
       <tr>
+        <td><input type="checkbox" value="${item._id}" /></td>
         <td>${item.companyName}</td>
         <td>${item.contactPerson}</td>
         <td>${item.phone}</td>
@@ -35,34 +56,29 @@ function renderTable(data) {
         <td>${item.numberOfStaff}</td>
         <td>${item.location}</td>
         <td>${item.timeline}</td>
-        <td>
-          <select onchange="updateQuotation('${item._id}', this.value)">
-            <option value="No" ${item.quotation === "No" ? "selected" : ""}>No</option>
-            <option value="Yes" ${item.quotation === "Yes" ? "selected" : ""}>Yes</option>
-          </select>
-        </td>
+        <td>${item.quotation || "No"}</td>
       </tr>
     `;
     tbody.innerHTML += row;
   });
 }
 
+/* FILTERS */
 function populateFilters() {
   const roleFilter = document.getElementById("roleFilter");
   const timelineFilter = document.getElementById("timelineFilter");
 
-  const roles = [...new Set(allData.map(item => item.requirementType))];
-  const timelines = [...new Set(allData.map(item => item.timeline))];
+  roleFilter.innerHTML = `<option value="">All Roles</option>`;
+  timelineFilter.innerHTML = `<option value="">All Timelines</option>`;
 
-  roles.forEach(role => {
-    roleFilter.innerHTML += `<option value="${role}">${role}</option>`;
-  });
+  [...new Set(allData.map(d => d.requirementType))]
+    .forEach(r => roleFilter.innerHTML += `<option value="${r}">${r}</option>`);
 
-  timelines.forEach(time => {
-    timelineFilter.innerHTML += `<option value="${time}">${time}</option>`;
-  });
+  [...new Set(allData.map(d => d.timeline))]
+    .forEach(t => timelineFilter.innerHTML += `<option value="${t}">${t}</option>`);
 }
 
+/* SEARCH */
 document.getElementById("searchInput").addEventListener("input", filterData);
 document.getElementById("roleFilter").addEventListener("change", filterData);
 document.getElementById("timelineFilter").addEventListener("change", filterData);
@@ -72,17 +88,36 @@ function filterData() {
   const role = document.getElementById("roleFilter").value;
   const timeline = document.getElementById("timelineFilter").value;
 
-  let filtered = allData.filter(item => {
-    return (
-      item.companyName.toLowerCase().includes(search) &&
-      (role === "" || item.requirementType === role) &&
-      (timeline === "" || item.timeline === timeline)
-    );
-  });
+  const filtered = allData.filter(item =>
+    item.companyName.toLowerCase().includes(search) &&
+    (role === "" || item.requirementType === role) &&
+    (timeline === "" || item.timeline === timeline)
+  );
 
   renderTable(filtered);
 }
 
+/* SELECT ALL */
+function toggleAll(source) {
+  const checkboxes = document.querySelectorAll("tbody input[type='checkbox']");
+  checkboxes.forEach(cb => cb.checked = source.checked);
+}
+
+/* DELETE SELECTED (Frontend only for now) */
+function deleteSelected() {
+  const selected = Array.from(document.querySelectorAll("tbody input:checked"))
+    .map(cb => cb.value);
+
+  if (selected.length === 0) {
+    alert("No entries selected");
+    return;
+  }
+
+  allData = allData.filter(item => !selected.includes(item._id));
+  renderTable(allData);
+}
+
+/* EXPORT */
 function exportCSV() {
   let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline\n";
 
@@ -96,9 +131,3 @@ function exportCSV() {
   link.download = "client-enquiries.csv";
   link.click();
 }
-
-function logout() {
-  location.reload();
-}
-
-loadData();
