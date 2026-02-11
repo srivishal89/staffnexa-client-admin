@@ -1,223 +1,302 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Staffnexa — Client Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Staffnexa — Client Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<style>
+  <style>
+    :root {
+      --primary: #1f3c88;
+      --primary-light: #2e4fa3;
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --danger: #e53935;
+    }
 
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:linear-gradient(135deg,#1f3c88,#325aa8);
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
 
-/* LOGIN */
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
 
-.login-container{
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+    /* ===== LOGIN ===== */
 
-.login-card{
-  background:white;
-  width:380px;
-  padding:40px;
-  border-radius:14px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.3);
-  text-align:center;
-}
+    #loginPage {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1f3c88, #2e4fa3);
+    }
 
-.login-card img{
-  width:80px;
-  margin-bottom:15px;
-}
+    .login-card {
+      width: 380px;
+      background: white;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      text-align: center;
+    }
 
-.login-card h2{
-  margin-bottom:25px;
-}
+    .login-card img {
+      width: 70px;
+      margin-bottom: 20px;
+    }
 
-.login-card input{
-  width:100%;
-  padding:13px;
-  margin-bottom:18px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:14px;
-}
+    .login-card h2 {
+      margin-bottom: 25px;
+      color: var(--primary);
+    }
 
-.button-row{
-  display:flex;
-  gap:10px;
-}
+    .login-card input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
 
-.button-row button{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-}
+    .login-actions {
+      display: flex;
+      gap: 10px;
+    }
 
-.btn-login{
-  background:#325aa8;
-  color:white;
-}
+    .login-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
-.btn-cancel{
-  background:#ddd;
-}
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
 
-/* DASHBOARD */
+    .btn-secondary {
+      background: #e2e8f0;
+    }
 
-.dashboard{
-  display:none;
-  padding:40px;
-}
+    /* ===== DASHBOARD ===== */
 
-.card{
-  background:white;
-  padding:30px;
-  border-radius:14px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
-}
+    #adminPage {
+      display: none;
+      min-height: 100vh;
+      display: flex;
+    }
 
-.top-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
+    .sidebar {
+      width: 240px;
+      background: var(--primary);
+      color: white;
+      padding: 30px 20px;
+    }
 
-.actions{
-  display:flex;
-  gap:10px;
-}
+    .sidebar h3 {
+      margin-bottom: 40px;
+      font-weight: 600;
+    }
 
-.actions button{
-  padding:10px 16px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-weight:bold;
-}
+    .sidebar a {
+      display: block;
+      color: #cbd5e1;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
 
-.btn-export{
-  background:#325aa8;
-  color:white;
-}
+    .sidebar a:hover {
+      color: white;
+    }
 
-.btn-delete{
-  background:#b22222;
-  color:white;
-}
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-}
+    .card {
+      background: var(--card);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
 
-thead{
-  background:#325aa8;
-  color:white;
-}
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
 
-th,td{
-  padding:12px;
-  border-bottom:1px solid #eee;
-  font-size:14px;
-}
+    .filters {
+      display: flex;
+      gap: 10px;
+    }
 
-tr:hover{
-  background:#f5f7fb;
-}
+    .filters input,
+    .filters select {
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
 
-</style>
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-export {
+      background: var(--primary);
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-delete {
+      background: var(--danger);
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th {
+      background: var(--primary);
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background: #f1f5f9;
+    }
+  </style>
 </head>
 <body>
 
-<div class="login-container" id="loginBox">
+<!-- LOGIN -->
+<div id="loginPage">
   <div class="login-card">
-    <img src="logo.png">
+    <img src="logo.png" />
     <h2>Client Admin Login</h2>
 
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
 
-    <div class="button-row">
-      <button class="btn-login" onclick="login()">Login</button>
-      <button class="btn-cancel" onclick="clearFields()">Cancel</button>
+    <div class="login-actions">
+      <button class="btn-primary" onclick="login()">Login</button>
+      <button class="btn-secondary" onclick="cancelLogin()">Cancel</button>
     </div>
   </div>
 </div>
 
-<div class="dashboard" id="dashboard">
-  <div class="card">
-    <div class="top-row">
-      <h2>Staffnexa — Client Enquiries</h2>
-      <div class="actions">
-        <button class="btn-export" onclick="exportCSV()">Export CSV</button>
-        <button class="btn-delete" onclick="deleteSelected()">Delete</button>
-      </div>
-    </div>
+<!-- DASHBOARD -->
+<div id="adminPage">
+  <div class="sidebar">
+    <h3>Staffnexa</h3>
+    <a href="#">Dashboard</a>
+    <a href="#">Client Enquiries</a>
+  </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th><input type="checkbox" onclick="toggleAll(this)"></th>
-          <th>Company</th>
-          <th>Contact</th>
-          <th>Phone</th>
-          <th>Role</th>
-          <th>Staff</th>
-          <th>Location</th>
-          <th>Timeline</th>
-          <th>Quotation</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+  <div class="main">
+    <div class="card">
+      <div class="card-header">
+        <div class="filters">
+          <input type="text" placeholder="Search company..." />
+          <select>
+            <option>All Roles</option>
+          </select>
+          <select>
+            <option>All Timelines</option>
+          </select>
+        </div>
+
+        <div class="actions">
+          <button class="btn-export">Export CSV</button>
+          <button class="btn-delete">Delete</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th><input type="checkbox" /></th>
+            <th>Company</th>
+            <th>Contact</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Staff</th>
+            <th>Location</th>
+            <th>Timeline</th>
+            <th>Quotation</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
 <script>
+function login() {
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
 
-const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
-
-function login(){
-  const u=document.getElementById("username").value;
-  const p=document.getElementById("password").value;
-
-  if(u==="admin" && p==="Staffnexa$5000"){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("dashboard").style.display="block";
+  if (u === "admin" && p === "Staffnexa$5000") {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("adminPage").style.display = "flex";
     loadData();
-  }else{
+  } else {
     alert("Invalid credentials");
   }
 }
 
-function clearFields(){
-  document.getElementById("username").value="";
-  document.getElementById("password").value="";
+function cancelLogin() {
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
 }
 
-async function loadData(){
-  try{
-    const res=await fetch(API_URL);
-    const data=await res.json();
+async function loadData() {
+  try {
+    const res = await fetch("https://staffnexa-backend.onrender.com/client-enquiries");
+    const data = await res.json();
 
-    const tbody=document.getElementById("tableBody");
-    tbody.innerHTML="";
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
 
-    data.data.forEach(item=>{
-      tbody.innerHTML+=`
+    data.data.forEach(item => {
+      tbody.innerHTML += `
         <tr>
-          <td><input type="checkbox" value="${item._id}"></td>
+          <td><input type="checkbox"></td>
           <td>${item.companyName}</td>
           <td>${item.contactPerson}</td>
           <td>${item.phone}</td>
@@ -225,29 +304,15 @@ async function loadData(){
           <td>${item.numberOfStaff}</td>
           <td>${item.location}</td>
           <td>${item.timeline}</td>
-          <td>${item.quotation || "No"}</td>
+          <td>No</td>
         </tr>
       `;
     });
 
-  }catch(err){
+  } catch (err) {
     alert("Failed to load data");
   }
 }
-
-function toggleAll(source){
-  document.querySelectorAll("#tableBody input[type=checkbox]")
-    .forEach(cb=>cb.checked=source.checked);
-}
-
-function deleteSelected(){
-  alert("Delete API to be connected next.");
-}
-
-function exportCSV(){
-  alert("Export feature coming next.");
-}
-
 </script>
 
 </body>
