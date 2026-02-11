@@ -1,32 +1,28 @@
-const API_BASE = "https://staffnexa-backend.onrender.com";
-
-const loginForm = document.getElementById("loginForm");
-const errorMsg = document.getElementById("errorMsg");
-
-loginForm.addEventListener("submit", async (e) => {
+document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
 
-  try {
-    const response = await fetch(`${API_BASE}/client-enquiries`, {
-      headers: {
-        "Authorization": "Basic " + btoa(username + ":" + password)
-      }
-    });
+  const encoded = btoa(username + ":" + password);
 
-    if (response.status === 401) {
-      errorMsg.textContent = "Invalid credentials";
-      return;
+  fetch("https://staffnexa-backend.onrender.com/client-enquiries", {
+    method: "GET",
+    headers: {
+      "Authorization": "Basic " + encoded
     }
-
-    localStorage.setItem("adminUser", username);
-    localStorage.setItem("adminPass", password);
-
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Invalid credentials");
+    localStorage.setItem("auth", encoded);
     window.location.href = "dashboard.html";
+  })
+  .catch(() => {
+    document.getElementById('errorMsg').innerText = "Invalid Username or Password";
+  });
+});
 
-  } catch (error) {
-    errorMsg.textContent = "Server error";
-  }
+document.getElementById('cancelBtn').addEventListener('click', function() {
+  document.getElementById('username').value = "";
+  document.getElementById('password').value = "";
 });
