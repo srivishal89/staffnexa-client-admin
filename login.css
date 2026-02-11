@@ -16,7 +16,7 @@
       rgba(40, 70, 140, 0.75),
       rgba(40, 70, 140, 0.75)
     ),
-    url("assets/login-bg.jpg") center/cover no-repeat;
+    url("login-bg.jpg") center/cover no-repeat;
 
   display: flex;
   justify-content: center;
