@@ -1,10 +1,4 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6fa;
-}
-
-/* LOGIN */
+/* LOGIN SCREEN */
 .login-wrapper {
   height: 100vh;
   display: flex;
@@ -15,96 +9,58 @@ body {
 
 .login-card {
   background: white;
-  padding: 40px;
-  width: 350px;
-  border-radius: 10px;
+  padding: 40px 35px;
+  width: 380px;
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
   text-align: center;
+}
+
+.login-card h2 {
+  margin-bottom: 25px;
+  font-size: 22px;
 }
 
 .login-card input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 
 .login-buttons {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .login-buttons button {
-  width: 48%;
-  padding: 10px;
-  background: #2a5298;
-  color: white;
+  flex: 1;
+  padding: 11px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.login-buttons button:first-child {
+  background: #2a5298;
+  color: white;
 }
 
 .cancel-btn {
-  background: #777;
+  background: #e0e0e0;
+}
+
+.login-buttons button:hover {
+  opacity: 0.9;
 }
 
 .error {
+  margin-top: 10px;
+  font-size: 13px;
   color: red;
-}
-
-/* ADMIN PANEL */
-.container {
-  width: 90%;
-  margin: 40px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.right-actions button {
-  margin-left: 10px;
-}
-
-.export-btn {
-  background: #2a5298;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-}
-
-.delete-btn {
-  background: #b00020;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-}
-
-.filters {
-  margin: 20px 0;
-  display: flex;
-  gap: 15px;
-}
-
-.filters input,
-.filters select {
-  padding: 8px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead {
-  background: #2a5298;
-  color: white;
-}
-
-th, td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
 }
