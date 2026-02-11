@@ -1,57 +1,40 @@
-* {
+body {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-.login-container {
-  display: flex;
+  font-family: 'Segoe UI', sans-serif;
+  background: url('login-bg.jpg') no-repeat center center fixed;
+  background-size: cover;
   height: 100vh;
-}
-
-.left-panel {
-  flex: 1;
-  background: linear-gradient(
-      rgba(40, 70, 140, 0.75),
-      rgba(40, 70, 140, 0.75)
-    ),
-    url("login-bg.jpg") center/cover no-repeat;
-
   display: flex;
-  justify-content: center;
   align-items: center;
-  color: white;
-}
-
-.overlay-text {
-  text-align: center;
-}
-
-.overlay-text h1 {
-  font-size: 28px;
-}
-
-.overlay-text p {
-  margin-top: 10px;
-  opacity: 0.9;
-}
-
-.right-panel {
-  flex: 1;
-  background: #f4f6fb;
-  display: flex;
   justify-content: center;
-  align-items: center;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 50, 120, 0.6);
+  backdrop-filter: blur(4px);
 }
 
 .login-card {
-  width: 320px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  width: 380px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  text-align: center;
+  z-index: 2;
+}
+
+.login-logo {
+  width: 80px;
+  margin-bottom: 15px;
 }
 
 .login-card h2 {
   margin-bottom: 25px;
-  color: #1f2f70;
+  color: #243a7a;
 }
 
 .login-card input {
@@ -60,23 +43,39 @@
   margin-bottom: 15px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 14px;
 }
 
-.login-card button {
-  width: 100%;
-  padding: 12px;
-  background: #2d3f8f;
+.btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  flex: 1;
+  background: #2d4fa3;
   color: white;
   border: none;
+  padding: 12px;
   border-radius: 6px;
   cursor: pointer;
 }
 
-.login-card button:hover {
-  background: #1f2f70;
+.btn-secondary {
+  flex: 1;
+  background: #ccc;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.error {
-  margin-top: 10px;
+.btn-primary:hover {
+  background: #1e3b85;
+}
+
+.error-msg {
   color: red;
+  font-size: 13px;
+  margin-top: 10px;
 }
