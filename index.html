@@ -159,6 +159,13 @@ td {
 <div id="app"></div>
 
 <script>
+const user = localStorage.getItem("adminUser");
+const pass = localStorage.getItem("adminPass");
+
+if (!user || !pass) {
+  window.location.href = "index.html";
+}
+
 
 const API = "https://staffnexa-backend.onrender.com";
 
