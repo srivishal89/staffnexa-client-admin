@@ -1,48 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Staffnexa — Client Admin</title>
-  <meta charset="UTF-8" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <!-- LOGIN SCREEN -->
 <div id="loginScreen" class="login-wrapper">
-  <div class="login-box">
+  <div class="login-card">
     <h2>Client Admin Login</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
     <div class="login-buttons">
       <button onclick="login()">Login</button>
-      <button onclick="clearLogin()" class="cancel-btn">Cancel</button>
+      <button class="cancel-btn" onclick="clearLogin()">Cancel</button>
     </div>
-    <p id="loginError"></p>
+    <p id="loginError" class="error"></p>
   </div>
 </div>
 
 <!-- ADMIN PANEL -->
 <div id="adminPanel" style="display:none;">
   <div class="container">
-    <h1>Staffnexa — Client Enquiries</h1>
-
-    <div class="controls">
-      <div class="left-controls">
-        <input type="text" id="searchInput" placeholder="Search company..." />
-        <select id="roleFilter"><option value="">All Roles</option></select>
-        <select id="timelineFilter"><option value="">All Timelines</option></select>
+    <div class="header">
+      <h2>Staffnexa — Client Enquiries</h2>
+      <div class="right-actions">
+        <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+        <button class="delete-btn" onclick="deleteSelected()">Delete</button>
       </div>
+    </div>
 
-      <div class="right-controls">
-        <button onclick="exportCSV()" class="export-btn">Export CSV</button>
-        <button onclick="deleteSelected()" class="delete-btn">Delete</button>
-      </div>
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="Search company..." oninput="filterTable()">
+      <select id="roleFilter" onchange="filterTable()">
+        <option value="">All Roles</option>
+      </select>
+      <select id="timelineFilter" onchange="filterTable()">
+        <option value="">All Timelines</option>
+      </select>
     </div>
 
     <table id="dataTable">
       <thead>
         <tr>
-          <th><input type="checkbox" id="selectAll" onclick="toggleAll(this)" /></th>
+          <th><input type="checkbox" onclick="toggleAll(this)"></th>
           <th>Company</th>
           <th>Contact</th>
           <th>Phone</th>
