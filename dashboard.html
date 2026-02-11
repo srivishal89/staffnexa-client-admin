@@ -1,0 +1,6 @@
+const user = localStorage.getItem("adminUser");
+const pass = localStorage.getItem("adminPass");
+
+if (!user || !pass) {
+  window.location.href = "index.html";
+}
