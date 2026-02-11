@@ -1,49 +1,104 @@
 const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
 
-async function loadEnquiries() {
-    try {
-        const response = await fetch(API_URL);
-        const result = await response.json();
+let allData = [];
 
-        if (!result.success) {
-            throw new Error("Failed to fetch data");
-        }
+async function loadData() {
+  try {
+    const res = await fetch(API_URL);
+    const result = await res.json();
 
-        const enquiries = result.data; // IMPORTANT: result.data
-
-        const tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = "";
-
-        enquiries.forEach(item => {
-            const row = `
-                <tr>
-                    <td>${item.companyName}</td>
-                    <td>${item.contactPerson}</td>
-                    <td>${item.phone}</td>
-                    <td>${item.requirementType}</td>
-                    <td>${item.numberOfStaff}</td>
-                    <td>${item.location}</td>
-                    <td>${item.timeline}</td>
-                    <td>${item.quotation || "No"}</td>
-                    <td>
-                        <button onclick="deleteEnquiry('${item._id}')">Delete</button>
-                    </td>
-                </tr>
-            `;
-            tableBody.innerHTML += row;
-        });
-
-    } catch (error) {
-        console.error("Error loading enquiries:", error);
+    if (!result.success) {
+      alert("Failed to load data");
+      return;
     }
+
+    allData = result.data;
+    populateFilters();
+    renderTable(allData);
+
+  } catch (error) {
+    alert("Failed to load data");
+  }
 }
 
-async function deleteEnquiry(id) {
-    await fetch(`${API_URL}/${id}`, {
-        method: "DELETE"
-    });
+function renderTable(data) {
+  const tbody = document.querySelector("#dataTable tbody");
+  tbody.innerHTML = "";
 
-    loadEnquiries();
+  data.forEach(item => {
+    const row = `
+      <tr>
+        <td>${item.companyName}</td>
+        <td>${item.contactPerson}</td>
+        <td>${item.phone}</td>
+        <td>${item.requirementType}</td>
+        <td>${item.numberOfStaff}</td>
+        <td>${item.location}</td>
+        <td>${item.timeline}</td>
+        <td>
+          <select onchange="updateQuotation('${item._id}', this.value)">
+            <option value="No" ${item.quotation === "No" ? "selected" : ""}>No</option>
+            <option value="Yes" ${item.quotation === "Yes" ? "selected" : ""}>Yes</option>
+          </select>
+        </td>
+      </tr>
+    `;
+    tbody.innerHTML += row;
+  });
 }
 
-loadEnquiries();
+function populateFilters() {
+  const roleFilter = document.getElementById("roleFilter");
+  const timelineFilter = document.getElementById("timelineFilter");
+
+  const roles = [...new Set(allData.map(item => item.requirementType))];
+  const timelines = [...new Set(allData.map(item => item.timeline))];
+
+  roles.forEach(role => {
+    roleFilter.innerHTML += `<option value="${role}">${role}</option>`;
+  });
+
+  timelines.forEach(time => {
+    timelineFilter.innerHTML += `<option value="${time}">${time}</option>`;
+  });
+}
+
+document.getElementById("searchInput").addEventListener("input", filterData);
+document.getElementById("roleFilter").addEventListener("change", filterData);
+document.getElementById("timelineFilter").addEventListener("change", filterData);
+
+function filterData() {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const role = document.getElementById("roleFilter").value;
+  const timeline = document.getElementById("timelineFilter").value;
+
+  let filtered = allData.filter(item => {
+    return (
+      item.companyName.toLowerCase().includes(search) &&
+      (role === "" || item.requirementType === role) &&
+      (timeline === "" || item.timeline === timeline)
+    );
+  });
+
+  renderTable(filtered);
+}
+
+function exportCSV() {
+  let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline\n";
+
+  allData.forEach(item => {
+    csv += `${item.companyName},${item.contactPerson},${item.phone},${item.requirementType},${item.numberOfStaff},${item.location},${item.timeline}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "client-enquiries.csv";
+  link.click();
+}
+
+function logout() {
+  location.reload();
+}
+
+loadData();
