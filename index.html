@@ -1,43 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8" />
     <title>Staffnexa — Client Admin</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <style>
         body {
-             margin: 0;
-    font-family: Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #0f2b5b, #1e4db7);
-}
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #1f3c88, #2c5cc5);
+        }
 
-.login-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        /* LOGIN */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
         .login-card {
             background: #ffffff;
             padding: 40px;
-            width: 380px;
-            border-radius: 10px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            width: 350px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             text-align: center;
         }
 
         .login-card img {
-            width: 70px;
-            margin-bottom: 20px;
+            width: 60px;
+            margin-bottom: 15px;
         }
 
         .login-card h2 {
-            margin-bottom: 25px;
-            color: #1e4db7;
+            margin-bottom: 20px;
+            color: #1f3c88;
         }
 
         .login-card input {
@@ -52,67 +51,102 @@
         .login-card button {
             width: 100%;
             padding: 12px;
-            background: #1e4db7;
-            color: white;
             border: none;
+            background: #2c5cc5;
+            color: white;
+            font-size: 15px;
             border-radius: 6px;
-            font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .login-card button:hover {
-            background: #163b8c;
+            background: #1f3c88;
         }
 
-        .error-msg {
-            color: red;
-            margin-top: 10px;
+        /* ADMIN */
+        #adminContainer {
             display: none;
+            padding: 20px;
+            background: #f4f6fa;
+            min-height: 100vh;
         }
 
-        .hidden {
-            display: none;
+        header {
+            background: #1f3c88;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .controls input,
+        .controls select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .controls button {
+            padding: 8px 12px;
+            border: none;
+            background: #2c5cc5;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #2c5cc5;
+            color: white;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: #f1f4fb;
+        }
+
+        .logout-btn {
+            float: right;
+            background: #e53935;
+        }
+
+        .logout-btn:hover {
+            background: #c62828;
         }
     </style>
 </head>
 
 <body>
 
-<div class="login-wrapper" id="loginWrapper">
+<!-- LOGIN -->
+<div id="loginContainer" class="login-wrapper">
     <div class="login-card">
-        <img src="logo.png" alt="Staffnexa Logo">
+        <img src="logo.png" alt="Staffnexa Logo" />
         <h2>Client Admin Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
         <button onclick="login()">Login</button>
-        <p class="error-msg" id="loginError">Invalid credentials</p>
     </div>
 </div>
 
-<div id="adminPanel" class="hidden">
-    <!-- YOUR EXISTING ADMIN LAYOUT HERE -->
-</div>
-
-<script>
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "Staffnexa$5000";
-
-function login() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-
-    if (user === ADMIN_USERNAME && pass === ADMIN_PASSWORD) {
-        document.getElementById("loginWrapper").style.display = "none";
-        document.getElementById("adminPanel").classList.remove("hidden");
-        document.body.style.background = "#f4f6f9";
-    } else {
-        document.getElementById("loginError").style.display = "block";
-    }
-}
-</script>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+<!-- ADMIN PANEL -->
+<div id="adminContain
