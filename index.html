@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Staffnexa Admin - Client Enquiries</title>
+    <title>Client Enquiries - Admin</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<script>
+// 🔐 SIMPLE LOGIN PROTECTION
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "Staffnexa@123";
+
+const username = prompt("Enter Username:");
+const password = prompt("Enter Password:");
+
+if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+    alert("Access Denied");
+    window.location.href = "https://staffnexats.com";
+}
+</script>
 
 <header class="admin-header">
     <h2>Staffnexa Admin — Client Enquiries</h2>
