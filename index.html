@@ -3,46 +3,157 @@
 <head>
   <meta charset="UTF-8">
   <title>Staffnexa — Client Admin</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg,#1f3c88,#325aa8);
+    }
+
+    /* ===== LOGIN ===== */
+
+    .login-wrapper {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-card {
+      background: white;
+      width: 360px;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .login-card h2 {
+      margin-bottom: 25px;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #325aa8;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #ddd;
+    }
+
+    /* ===== DASHBOARD ===== */
+
+    .dashboard {
+      display: none;
+      padding: 40px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-danger {
+      background: #b22222;
+      color: white;
+    }
+
+    .btn-export {
+      background: #325aa8;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #325aa8;
+      color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background: #f7f7f7;
+    }
+
+  </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen" class="login-wrapper">
+<!-- LOGIN -->
+<div class="login-wrapper" id="loginWrapper">
   <div class="login-card">
     <h2>Client Admin Login</h2>
+
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
-    <div class="login-buttons">
-      <button onclick="login()">Login</button>
-      <button class="cancel-btn" onclick="clearLogin()">Cancel</button>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="login()">Login</button>
+      <button class="btn btn-secondary" onclick="clearForm()">Cancel</button>
     </div>
-    <p id="loginError" class="error"></p>
   </div>
 </div>
 
-<!-- ADMIN PANEL -->
-<div id="adminPanel" style="display:none;">
-  <div class="container">
-    <div class="header">
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="card">
+    <div class="header-row">
       <h2>Staffnexa — Client Enquiries</h2>
-      <div class="right-actions">
-        <button class="export-btn" onclick="exportCSV()">Export CSV</button>
-        <button class="delete-btn" onclick="deleteSelected()">Delete</button>
+      <div class="actions">
+        <button class="btn btn-export" onclick="exportCSV()">Export CSV</button>
+        <button class="btn btn-danger" onclick="deleteSelected()">Delete</button>
       </div>
     </div>
 
-    <div class="filters">
-      <input type="text" id="searchInput" placeholder="Search company..." oninput="filterTable()">
-      <select id="roleFilter" onchange="filterTable()">
-        <option value="">All Roles</option>
-      </select>
-      <select id="timelineFilter" onchange="filterTable()">
-        <option value="">All Timelines</option>
-      </select>
-    </div>
-
-    <table id="dataTable">
+    <table>
       <thead>
         <tr>
           <th><input type="checkbox" onclick="toggleAll(this)"></th>
@@ -56,11 +167,77 @@
           <th>Quotation</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody id="tableBody"></tbody>
     </table>
+
   </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+
+const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
+
+function login() {
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+
+  if (u === "admin" && p === "Staffnexa$5000") {
+    document.getElementById("loginWrapper").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    loadData();
+  } else {
+    alert("Invalid credentials");
+  }
+}
+
+function clearForm() {
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+
+    data.data.forEach(item => {
+      tbody.innerHTML += `
+        <tr>
+          <td><input type="checkbox" value="${item._id}"></td>
+          <td>${item.companyName}</td>
+          <td>${item.contactPerson}</td>
+          <td>${item.phone}</td>
+          <td>${item.requirementType}</td>
+          <td>${item.numberOfStaff}</td>
+          <td>${item.location}</td>
+          <td>${item.timeline}</td>
+          <td>${item.quotation || "No"}</td>
+        </tr>
+      `;
+    });
+
+  } catch (err) {
+    alert("Failed to load data");
+  }
+}
+
+function toggleAll(source) {
+  document.querySelectorAll("#tableBody input[type=checkbox]")
+    .forEach(cb => cb.checked = source.checked);
+}
+
+function deleteSelected() {
+  alert("Delete feature will be connected to backend next.");
+}
+
+function exportCSV() {
+  alert("Export feature will be connected next.");
+}
+
+</script>
+
 </body>
 </html>
