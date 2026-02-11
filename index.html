@@ -1,205 +1,183 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Staffnexa — Client Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<title>Staffnexa — Client Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <style>
-    :root {
-      --primary: #1f3c88;
-      --primary-light: #2e4fa3;
-      --bg: #f4f6fb;
-      --card: #ffffff;
-      --text: #1e293b;
-      --muted: #64748b;
-      --danger: #e53935;
-    }
+<style>
+:root {
+  --primary:#1f3c88;
+  --primary-light:#2e4fa3;
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --danger:#e53935;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Segoe UI", sans-serif;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-    }
+body{
+  background:var(--bg);
+}
 
-    /* ===== LOGIN ===== */
+/* LOGIN */
+#loginPage{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#1f3c88,#2e4fa3);
+}
 
-    #loginPage {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #1f3c88, #2e4fa3);
-    }
+.login-card{
+  width:380px;
+  background:#fff;
+  padding:40px;
+  border-radius:14px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.2);
+  text-align:center;
+}
 
-    .login-card {
-      width: 380px;
-      background: white;
-      padding: 40px;
-      border-radius: 14px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-      text-align: center;
-    }
+.login-card img{
+  width:70px;
+  margin-bottom:20px;
+}
 
-    .login-card img {
-      width: 70px;
-      margin-bottom: 20px;
-    }
+.login-card input{
+  width:100%;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
 
-    .login-card h2 {
-      margin-bottom: 25px;
-      color: var(--primary);
-    }
+.login-actions{
+  display:flex;
+  gap:10px;
+}
 
-    .login-card input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-    }
+.login-actions button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
 
-    .login-actions {
-      display: flex;
-      gap: 10px;
-    }
+.btn-primary{background:var(--primary);color:white;}
+.btn-secondary{background:#e2e8f0;}
 
-    .login-actions button {
-      flex: 1;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-    }
+/* DASHBOARD */
+#adminPage{
+  display:none;
+  min-height:100vh;
+  display:flex;
+}
 
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
+.sidebar{
+  width:230px;
+  background:var(--primary);
+  color:white;
+  padding:30px 20px;
+}
 
-    .btn-secondary {
-      background: #e2e8f0;
-    }
+.sidebar h3{margin-bottom:40px;}
 
-    /* ===== DASHBOARD ===== */
+.sidebar a{
+  display:block;
+  color:#cbd5e1;
+  text-decoration:none;
+  margin-bottom:20px;
+}
 
-    #adminPage {
-      display: none;
-      min-height: 100vh;
-      display: flex;
-    }
+.sidebar a.active,
+.sidebar a:hover{
+  color:white;
+  font-weight:600;
+}
 
-    .sidebar {
-      width: 240px;
-      background: var(--primary);
-      color: white;
-      padding: 30px 20px;
-    }
+.main{
+  flex:1;
+  padding:40px;
+}
 
-    .sidebar h3 {
-      margin-bottom: 40px;
-      font-weight: 600;
-    }
+.card{
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
 
-    .sidebar a {
-      display: block;
-      color: #cbd5e1;
-      text-decoration: none;
-      margin-bottom: 20px;
-      font-size: 15px;
-    }
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
 
-    .sidebar a:hover {
-      color: white;
-    }
+.filters{
+  display:flex;
+  gap:10px;
+}
 
-    .main {
-      flex: 1;
-      padding: 40px;
-    }
+.filters input,
+.filters select{
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #ddd;
+}
 
-    .card {
-      background: var(--card);
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    }
+.actions{
+  display:flex;
+  gap:10px;
+}
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+.btn-export{
+  background:var(--primary);
+  color:white;
+  padding:8px 14px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
 
-    .filters {
-      display: flex;
-      gap: 10px;
-    }
+.btn-delete{
+  background:var(--danger);
+  color:white;
+  padding:8px 14px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
 
-    .filters input,
-    .filters select {
-      padding: 8px 10px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-    }
+table{
+  width:100%;
+  border-collapse:collapse;
+}
 
-    .actions {
-      display: flex;
-      gap: 10px;
-    }
+th{
+  background:var(--primary);
+  color:white;
+  padding:12px;
+  text-align:left;
+}
 
-    .btn-export {
-      background: var(--primary);
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+}
 
-    .btn-delete {
-      background: var(--danger);
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th {
-      background: var(--primary);
-      color: white;
-      padding: 12px;
-      text-align: left;
-      font-size: 14px;
-    }
-
-    td {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
-    }
-
-    tr:hover {
-      background: #f1f5f9;
-    }
-  </style>
+tr:hover{
+  background:#f1f5f9;
+}
+</style>
 </head>
+
 <body>
 
 <!-- LOGIN -->
@@ -222,33 +200,33 @@
 <div id="adminPage">
   <div class="sidebar">
     <h3>Staffnexa</h3>
-    <a href="#">Dashboard</a>
-    <a href="#">Client Enquiries</a>
+    <a href="#" class="active">Client Enquiries</a>
   </div>
 
   <div class="main">
     <div class="card">
+
       <div class="card-header">
         <div class="filters">
-          <input type="text" placeholder="Search company..." />
-          <select>
-            <option>All Roles</option>
+          <input type="text" id="searchInput" placeholder="Search company..." oninput="applyFilters()" />
+          <select id="roleFilter" onchange="applyFilters()">
+            <option value="">All Roles</option>
           </select>
-          <select>
-            <option>All Timelines</option>
+          <select id="timelineFilter" onchange="applyFilters()">
+            <option value="">All Timelines</option>
           </select>
         </div>
 
         <div class="actions">
-          <button class="btn-export">Export CSV</button>
-          <button class="btn-delete">Delete</button>
+          <button class="btn-export" onclick="exportCSV()">Export CSV</button>
+          <button class="btn-delete" onclick="deleteSelected()">Delete</button>
         </div>
       </div>
 
       <table>
         <thead>
           <tr>
-            <th><input type="checkbox" /></th>
+            <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()" /></th>
             <th>Company</th>
             <th>Contact</th>
             <th>Phone</th>
@@ -259,59 +237,132 @@
             <th>Quotation</th>
           </tr>
         </thead>
-        <tbody id="tableBody">
-        </tbody>
+        <tbody id="tableBody"></tbody>
       </table>
+
     </div>
   </div>
 </div>
 
 <script>
-function login() {
-  const u = document.getElementById("username").value;
-  const p = document.getElementById("password").value;
+let allData = [];
 
-  if (u === "admin" && p === "Staffnexa$5000") {
-    document.getElementById("loginPage").style.display = "none";
-    document.getElementById("adminPage").style.display = "flex";
+function login(){
+  const u=document.getElementById("username").value;
+  const p=document.getElementById("password").value;
+
+  if(u==="admin" && p==="Staffnexa$5000"){
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("adminPage").style.display="flex";
     loadData();
-  } else {
+  }else{
     alert("Invalid credentials");
   }
 }
 
-function cancelLogin() {
-  document.getElementById("username").value = "";
-  document.getElementById("password").value = "";
+function cancelLogin(){
+  document.getElementById("username").value="";
+  document.getElementById("password").value="";
 }
 
-async function loadData() {
-  try {
-    const res = await fetch("https://staffnexa-backend.onrender.com/client-enquiries");
-    const data = await res.json();
-
-    const tbody = document.getElementById("tableBody");
-    tbody.innerHTML = "";
-
-    data.data.forEach(item => {
-      tbody.innerHTML += `
-        <tr>
-          <td><input type="checkbox"></td>
-          <td>${item.companyName}</td>
-          <td>${item.contactPerson}</td>
-          <td>${item.phone}</td>
-          <td>${item.requirementType}</td>
-          <td>${item.numberOfStaff}</td>
-          <td>${item.location}</td>
-          <td>${item.timeline}</td>
-          <td>No</td>
-        </tr>
-      `;
-    });
-
-  } catch (err) {
+async function loadData(){
+  try{
+    const res=await fetch("https://staffnexa-backend.onrender.com/client-enquiries");
+    const data=await res.json();
+    allData=data.data;
+    populateFilters();
+    renderTable(allData);
+  }catch{
     alert("Failed to load data");
   }
+}
+
+function populateFilters(){
+  const roles=[...new Set(allData.map(i=>i.requirementType))];
+  const timelines=[...new Set(allData.map(i=>i.timeline))];
+
+  roles.forEach(r=>{
+    roleFilter.innerHTML+=`<option value="${r}">${r}</option>`;
+  });
+
+  timelines.forEach(t=>{
+    timelineFilter.innerHTML+=`<option value="${t}">${t}</option>`;
+  });
+}
+
+function renderTable(data){
+  tableBody.innerHTML="";
+  data.forEach(item=>{
+    tableBody.innerHTML+=`
+      <tr>
+        <td><input type="checkbox" class="rowCheck" data-id="${item._id}"></td>
+        <td>${item.companyName}</td>
+        <td>${item.contactPerson}</td>
+        <td>${item.phone}</td>
+        <td>${item.requirementType}</td>
+        <td>${item.numberOfStaff}</td>
+        <td>${item.location}</td>
+        <td>${item.timeline}</td>
+        <td>No</td>
+      </tr>
+    `;
+  });
+}
+
+function applyFilters(){
+  const search=searchInput.value.toLowerCase();
+  const role=roleFilter.value;
+  const timeline=timelineFilter.value;
+
+  const filtered=allData.filter(item=>{
+    return (
+      item.companyName.toLowerCase().includes(search) &&
+      (role==="" || item.requirementType===role) &&
+      (timeline==="" || item.timeline===timeline)
+    );
+  });
+
+  renderTable(filtered);
+}
+
+function toggleSelectAll(){
+  const checked=selectAll.checked;
+  document.querySelectorAll(".rowCheck").forEach(cb=>cb.checked=checked);
+}
+
+function getSelectedIds(){
+  return [...document.querySelectorAll(".rowCheck:checked")].map(cb=>cb.dataset.id);
+}
+
+async function deleteSelected(){
+  const ids=getSelectedIds();
+  if(ids.length===0){alert("No rows selected");return;}
+
+  for(const id of ids){
+    await fetch(`https://staffnexa-backend.onrender.com/client-enquiries/${id}`,{
+      method:"DELETE"
+    });
+  }
+
+  loadData();
+}
+
+function exportCSV(){
+  const rows=getSelectedIds().length
+    ? allData.filter(i=>getSelectedIds().includes(i._id))
+    : allData;
+
+  let csv="Company,Contact,Phone,Role,Staff,Location,Timeline\n";
+
+  rows.forEach(r=>{
+    csv+=`${r.companyName},${r.contactPerson},${r.phone},${r.requirementType},${r.numberOfStaff},${r.location},${r.timeline}\n`;
+  });
+
+  const blob=new Blob([csv],{type:"text/csv"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="client-enquiries.csv";
+  a.click();
 }
 </script>
 
