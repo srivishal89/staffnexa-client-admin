@@ -1,288 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Staffnexa — Client Admin</title>
-<style>
-
-body {
-  margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background:#f4f6fb;
-}
-
-.container {
-  display:flex;
-  height:100vh;
-}
-
-/* Sidebar */
-.sidebar {
-  width:220px;
-  background:#2c3e8f;
-  color:white;
-  padding:30px 20px;
-}
-
-.sidebar img {
-  width:50px;
-  display:block;
-  margin-bottom:15px;
-}
-
-.sidebar h2 {
-  margin:0 0 30px;
-  font-size:20px;
-}
-
-.sidebar a {
-  display:block;
-  padding:12px 10px;
-  color:white;
-  text-decoration:none;
-  border-radius:6px;
-}
-
-.sidebar a:hover {
-  background:rgba(255,255,255,0.1);
-}
-
-/* Main */
-.main {
-  flex:1;
-  padding:40px;
-}
-
-.card {
-  background:white;
-  border-radius:10px;
-  padding:25px;
-  box-shadow:0 5px 20px rgba(0,0,0,0.05);
-}
-
-.toolbar {
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:20px;
-}
-
-.filters input, .filters select {
-  padding:8px;
-  margin-right:10px;
-  border:1px solid #ccc;
-  border-radius:6px;
-}
-
-button {
-  padding:8px 14px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.export {
-  background:#2c3e8f;
-  color:white;
-}
-
-.delete {
-  background:#d9534f;
-  color:white;
-}
-
-table {
-  width:100%;
-  border-collapse:collapse;
-}
-
-th {
-  background:#2c3e8f;
-  color:white;
-  padding:10px;
-  text-align:left;
-}
-
-td {
-  padding:10px;
-  border-bottom:1px solid #eee;
-}
-
-.login-page {
-  display:flex;
-  height:100vh;
-}
-
-.left-panel {
-  flex:1;
-  background:linear-gradient(135deg,#2c3e8f,#4e5fcf);
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:24px;
-}
-
-.right-panel {
-  flex:1;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:white;
-}
-
-.login-box {
-  width:300px;
-}
-
-.login-box h2 {
-  margin-bottom:25px;
-}
-
-.login-box input {
-  width:100%;
-  padding:10px;
-  margin-bottom:15px;
-  border:1px solid #ccc;
-  border-radius:6px;
-}
-
-.login-box button {
-  width:100%;
-  background:#2c3e8f;
-  color:white;
-}
-
-</style>
+  <title>Staffnexa Client Login</title>
+  <link rel="stylesheet" href="login.css">
 </head>
 <body>
 
-<div id="app"></div>
+<div class="login-container">
 
-<script>
-const user = localStorage.getItem("adminUser");
-const pass = localStorage.getItem("adminPass");
-
-if (!user || !pass) {
-  window.location.href = "index.html";
-}
-
-
-const API = "https://staffnexa-backend.onrender.com";
-
-let token = localStorage.getItem("clientToken");
-
-function showLogin() {
-  document.getElementById("app").innerHTML = `
-  <div class="login-page">
-    <div class="left-panel">
-      Staffnexa Client Portal
+  <div class="left-panel">
+    <div class="overlay-text">
+      <h1>Staffnexa Client Portal</h1>
+      <p>Secure Admin Access</p>
     </div>
-    <div class="right-panel">
-      <div class="login-box">
-        <h2>Client Admin Login</h2>
-        <input id="username" placeholder="Username">
-        <input id="password" type="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-      </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="login-card">
+      <h2>Client Admin Login</h2>
+
+      <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+
+      <p id="errorMsg" class="error"></p>
     </div>
-  </div>`;
-}
+  </div>
 
-async function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+</div>
 
-  const res = await fetch(API + "/client-auth/login", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ username, password })
-  });
-
-  const data = await res.json();
-
-  if(data.success){
-    localStorage.setItem("clientToken", data.token);
-    token = data.token;
-    loadDashboard();
-  } else {
-    alert("Invalid credentials");
-  }
-}
-
-async function loadDashboard(){
-  document.getElementById("app").innerHTML = `
-  <div class="container">
-    <div class="sidebar">
-      <img src="logo.png">
-      <h2>Staffnexa</h2>
-      <a href="#">Client Enquiries</a>
-    </div>
-    <div class="main">
-      <div class="card">
-        <div class="toolbar">
-          <div class="filters">
-            <input placeholder="Search company">
-            <select><option>All Roles</option></select>
-            <select><option>All Timelines</option></select>
-          </div>
-          <div>
-            <button class="export">Export CSV</button>
-            <button class="delete">Delete</button>
-          </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th>Contact</th>
-              <th>Phone</th>
-              <th>Role</th>
-              <th>Staff</th>
-              <th>Location</th>
-              <th>Timeline</th>
-              <th>Quotation</th>
-            </tr>
-          </thead>
-          <tbody id="tableData"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>`;
-
-  fetchData();
-}
-
-async function fetchData(){
-  const res = await fetch(API + "/client-enquiries", {
-    headers:{ "Authorization":"Bearer " + token }
-  });
-
-  const data = await res.json();
-
-  const tbody = document.getElementById("tableData");
-  tbody.innerHTML="";
-
-  data.data.forEach(item=>{
-    tbody.innerHTML += `
-      <tr>
-        <td>${item.companyName}</td>
-        <td>${item.contactPerson}</td>
-        <td>${item.phone}</td>
-        <td>${item.requirementType}</td>
-        <td>${item.numberOfStaff}</td>
-        <td>${item.location}</td>
-        <td>${item.timeline}</td>
-        <td>${item.quotation || "No"}</td>
-      </tr>`;
-  });
-}
-
-if(token){
-  loadDashboard();
-}else{
-  showLogin();
-}
-
-</script>
+<script src="login.js"></script>
 </body>
 </html>
