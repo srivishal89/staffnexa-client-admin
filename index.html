@@ -149,4 +149,153 @@
 </div>
 
 <!-- ADMIN PANEL -->
-<div id="adminContain
+<div id="adminContainer">
+    <header>
+        Staffnexa Admin — Client Enquiries
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search Company" onkeyup="filterTable()" />
+
+        <select id="roleFilter" onchange="filterTable()">
+            <option value="">All Roles</option>
+            <option>Housekeeping</option>
+            <option>Pantry</option>
+            <option>Supervisor</option>
+            <option>Telecaller</option>
+        </select>
+
+        <select id="timelineFilter" onchange="filterTable()">
+            <option value="">All Timelines</option>
+            <option>Immediate</option>
+            <option>Within 7 Days</option>
+            <option>Within 15 Days</option>
+            <option>Within 30 Days</option>
+        </select>
+
+        <button onclick="exportCSV()">Export CSV</button>
+    </div>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Contact</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Staff</th>
+                <th>Location</th>
+                <th>Timeline</th>
+                <th>Quotation</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
+
+    function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username === "admin" && password === "Staffnexa@123") {
+            document.getElementById("loginContainer").style.display = "none";
+            document.getElementById("adminContainer").style.display = "block";
+            loadData();
+        } else {
+            alert("Invalid credentials");
+        }
+    }
+
+    function logout() {
+        document.getElementById("adminContainer").style.display = "none";
+        document.getElementById("loginContainer").style.display = "flex";
+    }
+
+    async function loadData() {
+        try {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+
+            const tbody = document.querySelector("#dataTable tbody");
+            tbody.innerHTML = "";
+
+            data.data.forEach(item => {
+                const row = `
+                    <tr>
+                        <td>${item.companyName}</td>
+                        <td>${item.contactPerson}</td>
+                        <td>${item.phone}</td>
+                        <td>${item.requirementType}</td>
+                        <td>${item.numberOfStaff}</td>
+                        <td>${item.location}</td>
+                        <td>${item.timeline}</td>
+                        <td>
+                            <select>
+                                <option>No</option>
+                                <option>Yes</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+        } catch (err) {
+            alert("Failed to load data");
+        }
+    }
+
+    function filterTable() {
+        const search = document.getElementById("searchInput").value.toLowerCase();
+        const role = document.getElementById("roleFilter").value;
+        const timeline = document.getElementById("timelineFilter").value;
+
+        const rows = document.querySelectorAll("#dataTable tbody tr");
+
+        rows.forEach(row => {
+            const company = row.cells[0].textContent.toLowerCase();
+            const roleText = row.cells[3].textContent;
+            const timelineText = row.cells[6].textContent;
+
+            if (
+                company.includes(search) &&
+                (role === "" || roleText === role) &&
+                (timeline === "" || timelineText === timeline)
+            ) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    function exportCSV() {
+        let csv = [];
+        const rows = document.querySelectorAll("table tr");
+
+        rows.forEach(row => {
+            const cols = row.querySelectorAll("td, th");
+            const rowData = [];
+            cols.forEach(col => rowData.push(col.innerText));
+            csv.push(rowData.join(","));
+        });
+
+        const blob = new Blob([csv.join("\n")], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.setAttribute("hidden", "");
+        a.setAttribute("href", url);
+        a.setAttribute("download", "client-enquiries.csv");
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+
+</body>
+</html>
