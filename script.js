@@ -1,53 +1,53 @@
-const auth = localStorage.getItem("auth");
+const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
 
-if (!auth) {
+const username = localStorage.getItem("clientUser");
+const password = localStorage.getItem("clientPass");
+
+if (!username || !password) {
   window.location.href = "index.html";
 }
 
-function loadData() {
-  fetch("https://staffnexa-backend.onrender.com/client-enquiries", {
+function loadEnquiries() {
+  fetch(API_URL, {
     headers: {
-      "Authorization": "Basic " + auth
-    }
+      Authorization: "Basic " + btoa(username + ":" + password),
+    },
   })
-  .then(res => res.json())
-  .then(data => {
-    const tbody = document.querySelector("#dataTable tbody");
-    tbody.innerHTML = "";
+    .then((res) => res.json())
+    .then((response) => {
+      if (!response.success) {
+        alert("Failed to load data");
+        return;
+      }
 
-    data.forEach(item => {
-      const row = `
-        <tr>
-          <td><input type="checkbox"></td>
-          <td>${item.company}</td>
-          <td>${item.contact}</td>
-          <td>${item.phone}</td>
-          <td>${item.role}</td>
-          <td>${item.staff}</td>
-          <td>${item.location}</td>
-          <td>${item.timeline}</td>
-          <td>${item.quotation}</td>
-        </tr>
-      `;
-      tbody.innerHTML += row;
+      renderTable(response.data);
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Failed to load data");
     });
-  })
-  .catch(() => {
-    alert("Failed to load data");
+}
+
+function renderTable(data) {
+  const tableBody = document.getElementById("tableBody");
+  tableBody.innerHTML = "";
+
+  data.forEach((item) => {
+    const row = `
+      <tr>
+        <td><input type="checkbox" value="${item._id}"></td>
+        <td>${item.companyName}</td>
+        <td>${item.contactPerson}</td>
+        <td>${item.phone}</td>
+        <td>${item.requirementType}</td>
+        <td>${item.numberOfStaff}</td>
+        <td>${item.location}</td>
+        <td>${item.timeline}</td>
+        <td>-</td>
+      </tr>
+    `;
+    tableBody.innerHTML += row;
   });
 }
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  localStorage.removeItem("auth");
-  window.location.href = "index.html";
-});
-
-document.getElementById("exportBtn").addEventListener("click", () => {
-  alert("Export feature will be enhanced in next update");
-});
-
-document.getElementById("deleteBtn").addEventListener("click", () => {
-  alert("Delete feature coming soon");
-});
-
-loadData();
+loadEnquiries();
