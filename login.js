@@ -1,13 +1,11 @@
-const API_BASE = "https://staffnexa-backend.onrender.com";
+const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
 
 document.addEventListener("DOMContentLoaded", function () {
-
-    const loginBtn = document.querySelector(".login-btn");
-    const cancelBtn = document.querySelector(".cancel-btn");
+    const loginBtn = document.getElementById("loginBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
 
     loginBtn.addEventListener("click", login);
     cancelBtn.addEventListener("click", resetForm);
-
 });
 
 async function login() {
@@ -15,23 +13,21 @@ async function login() {
     const password = document.getElementById("password").value.trim();
     const errorDiv = document.getElementById("errorMessage");
 
-    errorDiv.innerText = "";
-
     if (!username || !password) {
-        errorDiv.innerText = "Please enter username and password";
+        errorDiv.innerText = "Enter username and password";
         return;
     }
 
     try {
-        const response = await fetch(`${API_BASE}/client-enquiries`, {
+        const response = await fetch(API_URL, {
             method: "GET",
             headers: {
-                "Authorization": "Basic " + btoa(username + ":" + password)
+                Authorization: "Basic " + btoa(username + ":" + password)
             }
         });
 
         if (response.status === 401) {
-            errorDiv.innerText = "Invalid username or password";
+            errorDiv.innerText = "Invalid credentials";
             return;
         }
 
@@ -40,13 +36,13 @@ async function login() {
             return;
         }
 
-        localStorage.setItem("clientAuth", btoa(username + ":" + password));
+        localStorage.setItem("clientUser", username);
+        localStorage.setItem("clientPass", password);
 
         window.location.href = "dashboard.html";
 
-    } catch (error) {
+    } catch (err) {
         errorDiv.innerText = "Connection error";
-        console.error(error);
     }
 }
 
