@@ -6,7 +6,7 @@ let enquiriesData = [];
 async function loadEnquiries() {
   try {
 
-    const auth = localStorage.getItem("auth");
+    const auth = localStorage.getItem("clientAuth");
 
     if (!auth) {
       window.location.href = "index.html";
