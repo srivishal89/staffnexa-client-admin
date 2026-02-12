@@ -21,14 +21,12 @@ body {
 
 /* Login Card */
 .login-card input {
-    width: 90%;
-    max-width: 240px;
-    padding: 8px 10px;
+    width: 100%;
+    padding: 8px;
     margin-bottom: 12px;
     border-radius: 6px;
     border: 1px solid #ccc;
     font-size: 13px;
-    box-sizing: border-box;
 }
 
 
