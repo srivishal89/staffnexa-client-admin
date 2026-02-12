@@ -2,20 +2,34 @@ const API_BASE = "https://staffnexa-backend.onrender.com";
 
 let enquiriesData = [];
 
+/* LOAD DATA */
 async function loadEnquiries() {
   try {
 
-    const response = await fetch(`${API_BASE}/client-enquiries`);
+    const auth = localStorage.getItem("auth");
+
+    if (!auth) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    const response = await fetch(`${API_BASE}/client-enquiries`, {
+      headers: {
+        "Authorization": "Basic " + auth
+      }
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem("auth");
+      window.location.href = "index.html";
+      return;
+    }
 
     if (!response.ok) {
       throw new Error("API Error");
     }
 
     const result = await response.json();
-
-    if (!result.success) {
-      throw new Error("Invalid response format");
-    }
 
     enquiriesData = result.data;
 
@@ -27,6 +41,7 @@ async function loadEnquiries() {
   }
 }
 
+/* RENDER TABLE */
 function renderTable(data) {
   const tableBody = document.getElementById("tableBody");
   tableBody.innerHTML = "";
@@ -103,18 +118,29 @@ document.getElementById("exportBtn").addEventListener("click", function () {
 /* DELETE */
 document.getElementById("deleteBtn").addEventListener("click", async function () {
 
+  const auth = localStorage.getItem("auth");
+
   const checked = document.querySelectorAll("input[type='checkbox']:checked");
 
   for (let box of checked) {
     const id = box.getAttribute("data-id");
 
     await fetch(`${API_BASE}/client-enquiries/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: {
+        "Authorization": "Basic " + auth
+      }
     });
   }
 
   loadEnquiries();
 });
+
+/* LOGOUT FUNCTION */
+function logout() {
+  localStorage.removeItem("auth");
+  window.location.href = "index.html";
+}
 
 /* INITIAL LOAD */
 loadEnquiries();
