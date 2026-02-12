@@ -1,49 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>Staffnexa Client Admin</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
 <body>
 
 <div class="sidebar">
-  <div class="logo-section">
-    <img src="logo.png" class="logo" />
-    <h2>Staffnexa</h2>
-  </div>
-
-  <ul>
-    <li class="active">Client Enquiries</li>
-  </ul>
+  <img src="logo.png">
+  <h3>Staffnexa</h3>
+  <a href="#">Client Enquiries</a>
 </div>
 
 <div class="main">
+  <h2>Client Enquiries</h2>
 
-  <div class="top-bar">
-    <input type="text" id="searchInput" placeholder="Search company..." />
+  <div class="filters">
+    <input type="text" placeholder="Search company..." id="search">
     <select id="roleFilter">
       <option value="">All Roles</option>
-      <option value="Pantry">Pantry</option>
-      <option value="Housekeeping">Housekeeping</option>
+      <option>Pantry</option>
+      <option>Housekeeping</option>
     </select>
     <select id="timelineFilter">
       <option value="">All Timelines</option>
-      <option value="Immediate">Immediate</option>
-      <option value="Within 7 days">Within 7 days</option>
-      <option value="Within 15 days">Within 15 days</option>
+      <option>Immediate</option>
+      <option>Within 7 days</option>
+      <option>Within 15 days</option>
     </select>
 
-    <div class="right-actions">
-      <button id="exportBtn">Export CSV</button>
-      <button id="deleteBtn" class="danger">Delete</button>
-    </div>
+    <button class="btn btn-primary">Export</button>
+    <button class="btn btn-danger">Delete</button>
   </div>
 
   <table>
     <thead>
       <tr>
-        <th></th>
         <th>Company</th>
         <th>Contact</th>
         <th>Phone</th>
@@ -60,6 +46,4 @@
 </div>
 
 <script src="dashboard.js"></script>
-
 </body>
-</html>
