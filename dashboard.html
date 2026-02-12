@@ -1,82 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Staffnexa Client Admin</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<div class="layout">
+<div class="sidebar">
+  <div class="logo-section">
+    <img src="logo.png" class="logo" />
+    <h2>Staffnexa</h2>
+  </div>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="logo-section">
-      <img src="logo.png" alt="Logo" class="logo">
-      <h2>Staffnexa</h2>
+  <ul>
+    <li class="active">Client Enquiries</li>
+  </ul>
+</div>
+
+<div class="main">
+
+  <div class="top-bar">
+    <input type="text" id="searchInput" placeholder="Search company..." />
+    <select id="roleFilter">
+      <option value="">All Roles</option>
+      <option value="Pantry">Pantry</option>
+      <option value="Housekeeping">Housekeeping</option>
+    </select>
+    <select id="timelineFilter">
+      <option value="">All Timelines</option>
+      <option value="Immediate">Immediate</option>
+      <option value="Within 7 days">Within 7 days</option>
+      <option value="Within 15 days">Within 15 days</option>
+    </select>
+
+    <div class="right-actions">
+      <button id="exportBtn">Export CSV</button>
+      <button id="deleteBtn" class="danger">Delete</button>
     </div>
+  </div>
 
-    <nav>
-      <ul>
-        <li class="active">Client Enquiries</li>
-      </ul>
-    </nav>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="main-content">
-
-    <div class="top-bar">
-      <div class="filters">
-        <input type="text" id="searchInput" placeholder="Search company..." />
-
-        <select id="roleFilter">
-          <option>All Roles</option>
-          <option>Pantry</option>
-          <option>Housekeeping</option>
-          <option>Supervisor</option>
-        </select>
-
-        <select id="timelineFilter">
-          <option>All Timelines</option>
-          <option>Immediate</option>
-          <option>Within 7 days</option>
-          <option>Within 30 days</option>
-        </select>
-      </div>
-
-      <div class="actions">
-        <button id="exportBtn" class="btn-primary">Export CSV</button>
-        <button id="deleteBtn" class="btn-danger">Delete</button>
-        <button id="logoutBtn" class="btn-secondary">Logout</button>
-      </div>
-    </div>
-
-    <!-- TABLE -->
-    <div class="table-container">
-      <table id="dataTable">
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAll"></th>
-            <th>Company</th>
-            <th>Contact</th>
-            <th>Phone</th>
-            <th>Role</th>
-            <th>Staff</th>
-            <th>Location</th>
-            <th>Timeline</th>
-            <th>Quotation</th>
-          </tr>
-        </thead>
-        <tbody>id="tableBody"
-        </tbody>
-      </table>
-    </div>
-
-  </main>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Staff</th>
+        <th>Location</th>
+        <th>Timeline</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+  </table>
 
 </div>
 
-<script src="script.js"></script>
+<script src="dashboard.js"></script>
+
 </body>
 </html>
