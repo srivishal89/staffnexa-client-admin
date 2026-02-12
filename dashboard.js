@@ -1,40 +1,37 @@
-const API_BASE = "https://staffnexa-backend.onrender.com";
+const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
 
-let enquiriesData = [];
+const username = localStorage.getItem("clientUser");
+const password = localStorage.getItem("clientPass");
 
-document.addEventListener("DOMContentLoaded", loadEnquiries);
+if (!username || !password) {
+    window.location.href = "index.html";
+}
 
 async function loadEnquiries() {
-
-    const auth = localStorage.getItem("clientAuth");
-
-    if (!auth) {
-        window.location.href = "index.html";
-        return;
-    }
-
     try {
-        const response = await fetch(`${API_BASE}/client-enquiries`, {
+        const response = await fetch(API_URL, {
             headers: {
-                "Authorization": "Basic " + auth
+                Authorization: "Basic " + btoa(username + ":" + password)
             }
         });
 
-        if (response.status === 401) {
-            localStorage.removeItem("clientAuth");
+        if (!response.ok) {
+            alert("Session expired. Login again.");
             window.location.href = "index.html";
             return;
         }
 
         const result = await response.json();
 
-        enquiriesData = result.data;
+        if (!result.success) {
+            alert("Failed to load data");
+            return;
+        }
 
-        renderTable(enquiriesData);
+        renderTable(result.data);
 
     } catch (error) {
         alert("Failed to load data");
-        console.error(error);
     }
 }
 
@@ -43,7 +40,7 @@ function renderTable(data) {
     tableBody.innerHTML = "";
 
     data.forEach(item => {
-        tableBody.innerHTML += `
+        const row = `
             <tr>
                 <td>${item.companyName}</td>
                 <td>${item.contactPerson}</td>
@@ -54,5 +51,8 @@ function renderTable(data) {
                 <td>${item.timeline}</td>
             </tr>
         `;
+        tableBody.innerHTML += row;
     });
 }
+
+document.addEventListener("DOMContentLoaded", loadEnquiries);
