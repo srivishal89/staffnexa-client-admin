@@ -20,15 +20,17 @@ body {
 }
 
 /* Login Card */
-.login-card input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 13px;
+.login-card {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 380px;
+    background: white;
+    padding: 40px 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
-
 
 .logo {
     width: 70px;
