@@ -70,10 +70,6 @@ body {
     cursor: pointer;
 }
 
-.login-btn:hover {
-    background: #16325c;
-}
-
 .cancel-btn {
     flex: 1;
     padding: 12px;
@@ -82,6 +78,7 @@ body {
     border-radius: 6px;
     cursor: pointer;
 }
+
 
 .error {
     margin-top: 10px;
