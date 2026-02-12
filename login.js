@@ -1,8 +1,19 @@
 const API_BASE = "https://staffnexa-backend.onrender.com";
 
+document.addEventListener("DOMContentLoaded", function () {
+
+    const loginBtn = document.getElementById("loginBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+
+    loginBtn.addEventListener("click", login);
+    cancelBtn.addEventListener("click", resetForm);
+
+});
+
 async function login() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
     const errorDiv = document.getElementById("errorMessage");
 
     if (!username || !password) {
@@ -28,10 +39,8 @@ async function login() {
             return;
         }
 
-        // Save credentials temporarily
         localStorage.setItem("clientAuth", btoa(username + ":" + password));
 
-        // Redirect
         window.location.href = "dashboard.html";
 
     } catch (error) {
