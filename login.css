@@ -20,22 +20,17 @@ body {
 }
 
 /* Login Card */
-.login-card input {
-  width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 14px;
-  border-radius: 6px;
-  border: 1px solid #d0d5dd;
-  font-size: 14px;
-  transition: all 0.2s ease;
+.login-card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 280px;
+    background: white;
+    padding: 10px 12px;
+    border-radius: 6px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
-
-.login-card input:focus {
-  border-color: #1e3c72;
-  box-shadow: 0 0 0 2px rgba(30, 60, 114, 0.15);
-  outline: none;
-}
-
 
 .logo {
     width: 70px;
