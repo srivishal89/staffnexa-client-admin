@@ -1,49 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Client Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
 <body>
 
-<div class="sidebar">
-  <img src="logo.png">
-  <h3>Staffnexa</h3>
-  <a href="#">Client Enquiries</a>
-</div>
+<div class="dashboard-wrapper">
 
-<div class="main">
-  <h2>Client Enquiries</h2>
+    <div class="top-bar">
+        <h2>Client Enquiries</h2>
+        <button class="logout-btn" onclick="location.href='index.html'">Logout</button>
+    </div>
 
-  <div class="filters">
-    <input type="text" placeholder="Search company..." id="search">
-    <select id="roleFilter">
-      <option value="">All Roles</option>
-      <option>Pantry</option>
-      <option>Housekeeping</option>
-    </select>
-    <select id="timelineFilter">
-      <option value="">All Timelines</option>
-      <option>Immediate</option>
-      <option>Within 7 days</option>
-      <option>Within 15 days</option>
-    </select>
+    <div class="filters">
+        <input type="text" id="searchInput" placeholder="Search company...">
 
-    <button class="btn btn-primary">Export</button>
-    <button class="btn btn-danger">Delete</button>
-  </div>
+        <select id="roleFilter">
+            <option value="">All Roles</option>
+            <option value="Housekeeping">Housekeeping</option>
+            <option value="Pantry">Pantry</option>
+            <option value="Supervisor">Supervisor</option>
+        </select>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Company</th>
-        <th>Contact</th>
-        <th>Phone</th>
-        <th>Role</th>
-        <th>Staff</th>
-        <th>Location</th>
-        <th>Timeline</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-    </tbody>
-  </table>
+        <select id="timelineFilter">
+            <option value="">All Timelines</option>
+            <option value="Immediate">Immediate</option>
+            <option value="Within 7 days">Within 7 days</option>
+            <option value="Within 15 days">Within 15 days</option>
+        </select>
+
+        <button id="exportBtn">Export CSV</button>
+        <button id="deleteBtn" class="danger">Delete</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Company</th>
+                    <th>Contact</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Staff</th>
+                    <th>Location</th>
+                    <th>Timeline</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 
 </div>
 
 <script src="dashboard.js"></script>
+
 </body>
+</html>
