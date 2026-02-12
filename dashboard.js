@@ -1,37 +1,45 @@
-const API_URL = "https://staffnexa-backend.onrender.com/client-enquiries";
+const API_BASE = "https://staffnexa-backend.onrender.com";
 
-const username = localStorage.getItem("clientUser");
-const password = localStorage.getItem("clientPass");
+const auth = localStorage.getItem("clientAuth");
 
-if (!username || !password) {
+if (!auth) {
     window.location.href = "index.html";
 }
 
+let enquiriesData = [];
+
 async function loadEnquiries() {
     try {
-        const response = await fetch(API_URL, {
+
+        const response = await fetch(`${API_BASE}/client-enquiries`, {
+            method: "GET",
             headers: {
-                Authorization: "Basic " + btoa(username + ":" + password)
+                "Authorization": "Basic " + auth
             }
         });
 
-        if (!response.ok) {
-            alert("Session expired. Login again.");
+        if (response.status === 401) {
+            localStorage.removeItem("clientAuth");
             window.location.href = "index.html";
             return;
+        }
+
+        if (!response.ok) {
+            throw new Error("API Error");
         }
 
         const result = await response.json();
 
         if (!result.success) {
-            alert("Failed to load data");
-            return;
+            throw new Error("Invalid response format");
         }
 
-        renderTable(result.data);
+        enquiriesData = result.data;
+        renderTable(enquiriesData);
 
     } catch (error) {
         alert("Failed to load data");
+        console.error(error);
     }
 }
 
@@ -42,6 +50,7 @@ function renderTable(data) {
     data.forEach(item => {
         const row = `
             <tr>
+                <td><input type="checkbox" data-id="${item._id}" /></td>
                 <td>${item.companyName}</td>
                 <td>${item.contactPerson}</td>
                 <td>${item.phone}</td>
@@ -55,4 +64,4 @@ function renderTable(data) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", loadEnquiries);
+loadEnquiries();
