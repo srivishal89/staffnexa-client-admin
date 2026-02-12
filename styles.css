@@ -1,78 +1,96 @@
-/* ================= DASHBOARD ================= */
-
-.dashboard-wrapper {
-    padding: 40px;
-    max-width: 1200px;
-    margin: auto;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
 }
 
+/* Main container */
+.container {
+    width: 95%;
+    max-width: 1100px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Top bar */
 .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 25px;
+}
+
+.top-bar h2 {
+    margin: 0;
+}
+
+/* Controls section */
+.controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
     margin-bottom: 20px;
+}
+
+.controls input,
+.controls select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    min-width: 180px;
+}
+
+.controls button {
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#exportBtn {
+    background: #4e5bd5;
+    color: white;
+}
+
+#deleteBtn {
+    background: #e53935;
+    color: white;
 }
 
 .logout-btn {
-    padding: 8px 14px;
-    background: #1e3c72;
+    background: #2c3e50;
     color: white;
-    border: none;
+    padding: 8px 16px;
     border-radius: 6px;
+    border: none;
     cursor: pointer;
 }
 
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.filters input,
-.filters select {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.filters button {
-    padding: 8px 14px;
-    border-radius: 6px;
-    border: none;
-    background: #1e3c72;
-    color: white;
-    cursor: pointer;
-}
-
-.filters .danger {
-    background: #c0392b;
-}
-
-.table-container {
-    overflow-x: auto;
-}
-
+/* Table styling */
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-}
-
-th, td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    text-align: left;
 }
 
 thead {
-    background: #1e3c72;
+    background: linear-gradient(90deg, #4e5bd5, #6573f5);
     color: white;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .dashboard-wrapper {
-        padding: 20px;
-    }
+thead th {
+    padding: 12px;
+    text-align: left;
+}
+
+tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+    background: #f7f9ff;
 }
