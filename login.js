@@ -1,9 +1,14 @@
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-  e.preventDefault();
+function login() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorMessage = document.getElementById("errorMessage");
 
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+  if (!username || !password) {
+    errorMessage.innerText = "Please enter username and password";
+    return;
+  }
 
+  // Basic Auth header
   const encoded = btoa(username + ":" + password);
 
   fetch("https://staffnexa-backend.onrender.com/client-enquiries", {
@@ -13,16 +18,26 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     }
   })
   .then(res => {
-    if (!res.ok) throw new Error("Invalid credentials");
+    if (res.status === 401) {
+      throw new Error("Invalid Credentials");
+    }
+    if (!res.ok) {
+      throw new Error("Server error");
+    }
+    return res.json();
+  })
+  .then(data => {
+    // Save auth in localStorage
     localStorage.setItem("auth", encoded);
     window.location.href = "dashboard.html";
   })
-  .catch(() => {
-    document.getElementById('errorMsg').innerText = "Invalid Username or Password";
+  .catch(err => {
+    errorMessage.innerText = err.message;
   });
-});
+}
 
-document.getElementById('cancelBtn').addEventListener('click', function() {
-  document.getElementById('username').value = "";
-  document.getElementById('password').value = "";
-});
+function resetForm() {
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("errorMessage").innerText = "";
+}
