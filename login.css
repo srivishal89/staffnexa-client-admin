@@ -45,11 +45,13 @@ body {
 /* Inputs */
 .login-card input {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
+    max-width: 260px;   /* controls width */
+    padding: 8px 10px;  /* reduced height */
+    margin: 8px auto;   /* centered */
+    display: block;
     border-radius: 6px;
     border: 1px solid #ccc;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 /* Buttons */
