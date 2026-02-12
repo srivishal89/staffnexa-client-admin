@@ -1,18 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Staffnexa | Admin Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="login.css">
+</head>
+
 <body>
+
+  <div class="overlay"></div>
+
   <div class="login-card">
-    <img src="logo.png" alt="Staffnexa Logo">
-    <h2>Client Admin Login</h2>
+      <img src="logo.png" alt="Staffnexa Logo" class="logo">
+      <h2>Admin Login (Client)</h2>
 
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
 
-    <div class="button-group">
-      <button class="login-btn" onclick="login()">Login</button>
-      <button class="cancel-btn" onclick="resetForm()">Cancel</button>
-    </div>
+      <div class="button-group">
+          <button class="login-btn" onclick="login()">Login</button>
+          <button class="cancel-btn" onclick="resetForm()">Cancel</button>
+      </div>
 
-    <div id="errorMessage" class="error"></div>
+      <div id="errorMessage" class="error"></div>
   </div>
 
   <script src="login.js"></script>
+
 </body>
+</html>
