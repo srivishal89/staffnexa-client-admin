@@ -7,39 +7,50 @@
 </head>
 <body>
 
-<div class="dashboard-wrapper">
+<div class="container">
 
     <div class="top-bar">
         <h2>Client Enquiries</h2>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+        <button onclick="logout()" class="logout-btn">Logout</button>
     </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Company</th>
-                    <th>Contact</th>
-                    <th>Phone</th>
-                    <th>Role</th>
-                    <th>Staff</th>
-                    <th>Location</th>
-                    <th>Timeline</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search company...">
+
+        <select id="roleFilter">
+            <option value="">All Roles</option>
+            <option value="Pantry">Pantry</option>
+            <option value="Housekeeping">Housekeeping</option>
+        </select>
+
+        <select id="timelineFilter">
+            <option value="">All Timelines</option>
+            <option value="Immediate">Immediate</option>
+            <option value="Within 7 days">Within 7 days</option>
+            <option value="Within 15 days">Within 15 days</option>
+        </select>
+
+        <button id="exportBtn">Export CSV</button>
+        <button id="deleteBtn">Delete Selected</button>
     </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Company</th>
+                <th>Contact</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Staff</th>
+                <th>Location</th>
+                <th>Timeline</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
 
 </div>
-
-<script>
-function logout() {
-    localStorage.removeItem("clientUser");
-    localStorage.removeItem("clientPass");
-    window.location.href = "index.html";
-}
-</script>
 
 <script src="dashboard.js"></script>
 </body>
