@@ -2,45 +2,22 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Client Admin Dashboard</title>
+    <title>Client Dashboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
 <div class="dashboard-wrapper">
 
     <div class="top-bar">
         <h2>Client Enquiries</h2>
-        <button class="logout-btn" onclick="location.href='index.html'">Logout</button>
-    </div>
-
-    <div class="filters">
-        <input type="text" id="searchInput" placeholder="Search company...">
-
-        <select id="roleFilter">
-            <option value="">All Roles</option>
-            <option value="Housekeeping">Housekeeping</option>
-            <option value="Pantry">Pantry</option>
-            <option value="Supervisor">Supervisor</option>
-        </select>
-
-        <select id="timelineFilter">
-            <option value="">All Timelines</option>
-            <option value="Immediate">Immediate</option>
-            <option value="Within 7 days">Within 7 days</option>
-            <option value="Within 15 days">Within 15 days</option>
-        </select>
-
-        <button id="exportBtn">Export CSV</button>
-        <button id="deleteBtn" class="danger">Delete</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
     <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th></th>
                     <th>Company</th>
                     <th>Contact</th>
                     <th>Phone</th>
@@ -56,7 +33,14 @@
 
 </div>
 
-<script src="dashboard.js"></script>
+<script>
+function logout() {
+    localStorage.removeItem("clientUser");
+    localStorage.removeItem("clientPass");
+    window.location.href = "index.html";
+}
+</script>
 
+<script src="dashboard.js"></script>
 </body>
 </html>
