@@ -1,57 +1,189 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Client Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Staffnexa Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .table-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f0f2f5;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            font-size: 14px;
+            color: #333;
+            border-top: 1px solid #eee;
+        }
+
+        tr:hover {
+            background-color: #fafafa;
+        }
+
+        .delete-btn {
+            color: #e74c3c;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .delete-btn:hover {
+            text-decoration: underline;
+        }
+
+        .search-box {
+            margin-bottom: 15px;
+            padding: 8px;
+            width: 250px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tr {
+                margin-bottom: 10px;
+                background: #fff;
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+            td {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
+<h1>Candidate Applications</h1>
 
-    <div class="top-bar">
-        <h2>Client Enquiries</h2>
-        <button onclick="logout()" class="logout-btn">Logout</button>
-    </div>
+<input type="text" id="search" class="search-box" placeholder="Search candidate...">
 
-    <div class="controls">
-        <input type="text" id="searchInput" placeholder="Search company...">
-
-        <select id="roleFilter">
-            <option value="">All Roles</option>
-            <option value="Pantry">Pantry</option>
-            <option value="Housekeeping">Housekeeping</option>
-        </select>
-
-        <select id="timelineFilter">
-            <option value="">All Timelines</option>
-            <option value="Immediate">Immediate</option>
-            <option value="Within 7 days">Within 7 days</option>
-            <option value="Within 15 days">Within 15 days</option>
-        </select>
-
-        <button id="exportBtn">Export CSV</button>
-        <button id="deleteBtn">Delete Selected</button>
-    </div>
-
-    <table>
+<div class="table-container">
+    <table id="candidateTable">
         <thead>
             <tr>
-                <th></th>
-                <th>Company</th>
-                <th>Contact</th>
+                <th>Name</th>
                 <th>Phone</th>
                 <th>Role</th>
-                <th>Staff</th>
                 <th>Location</th>
-                <th>Timeline</th>
+                <th>Date</th>
+                <th>Action</th>
             </tr>
         </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
 
+        <tbody id="tableBody">
+        </tbody>
+    </table>
 </div>
 
-<script src="dashboard.js"></script>
+<script>
+
+const API_URL = "https://jobapp.staffnexats.com/api/applications";
+
+async function fetchCandidates() {
+    try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+
+        const table = document.getElementById("tableBody");
+        table.innerHTML = "";
+
+        data.forEach(candidate => {
+
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${candidate.name || "-"}</td>
+                <td>${candidate.phone || "-"}</td>
+                <td>${candidate.role || "-"}</td>
+                <td>${candidate.location || "-"}</td>
+                <td>${new Date(candidate.createdAt).toLocaleString()}</td>
+                <td>
+                    <span class="delete-btn" onclick="deleteCandidate('${candidate._id}')">
+                        Delete
+                    </span>
+                </td>
+            `;
+
+            table.appendChild(row);
+        });
+
+    } catch (err) {
+        console.error("Error loading data", err);
+    }
+}
+
+async function deleteCandidate(id) {
+    if (!confirm("Delete this candidate?")) return;
+
+    try {
+        await fetch(`${API_URL}/${id}`, {
+            method: "DELETE"
+        });
+
+        fetchCandidates();
+
+    } catch (err) {
+        alert("Delete failed");
+    }
+}
+
+document.getElementById("search").addEventListener("keyup", function() {
+    let value = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#candidateTable tbody tr");
+
+    rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(value) ? "" : "none";
+    });
+});
+
+fetchCandidates();
+
+</script>
+
 </body>
 </html>
