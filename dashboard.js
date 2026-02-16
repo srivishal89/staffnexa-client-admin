@@ -22,14 +22,7 @@ async function loadEnquiries() {
             cache: "no-store"
         });
 
-        if (response.status === 401) {
-            logout();
-            return;
-        }
-
         const result = await response.json();
-
-        console.log("API Response:", result);
 
         enquiriesData = Array.isArray(result) ? result : [];
 
@@ -48,25 +41,50 @@ function renderTable(data) {
     const tableBody = document.getElementById("tableBody");
     tableBody.innerHTML = "";
 
-    if (!data.length) {
-        tableBody.innerHTML = `<tr><td colspan="8">No data</td></tr>`;
-        return;
-    }
-
     data.forEach(item => {
         tableBody.innerHTML += `
             <tr>
                 <td><input type="checkbox" data-id="${item._id}"></td>
-                <td>${item.companyName || ""}</td>
-                <td>${item.contactPerson || ""}</td>
-                <td>${item.phone || ""}</td>
-                <td>${item.requirementType || ""}</td>
-                <td>${item.numberOfStaff || ""}</td>
-                <td>${item.location || ""}</td>
-                <td>${item.timeline || ""}</td>
+                <td>${item.companyName}</td>
+                <td>${item.contactPerson}</td>
+                <td>${item.phone}</td>
+                <td>${item.requirementType}</td>
+                <td>${item.numberOfStaff}</td>
+                <td>${item.location}</td>
+                <td>${item.timeline}</td>
+
+                <td>
+                    <select onchange="updateStatus('${item._id}', this.value)">
+                        <option ${item.status === "New" ? "selected" : ""}>New</option>
+                        <option ${item.status === "Contacted" ? "selected" : ""}>Contacted</option>
+                        <option ${item.status === "In Progress" ? "selected" : ""}>In Progress</option>
+                        <option ${item.status === "Closed" ? "selected" : ""}>Closed</option>
+                    </select>
+                </td>
             </tr>
         `;
     });
+}
+
+// =======================
+// UPDATE STATUS
+// =======================
+async function updateStatus(id, status) {
+    try {
+        await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Basic " + auth
+            },
+            body: JSON.stringify({ status })
+        });
+
+        loadEnquiries();
+
+    } catch (error) {
+        console.error("Status update failed", error);
+    }
 }
 
 // =======================
@@ -76,55 +94,10 @@ document.getElementById("searchInput").addEventListener("input", function () {
     const value = this.value.toLowerCase();
 
     const filtered = enquiriesData.filter(item =>
-        (item.companyName || "").toLowerCase().includes(value)
+        item.companyName.toLowerCase().includes(value)
     );
 
     renderTable(filtered);
-});
-
-// =======================
-// ROLE FILTER
-// =======================
-document.getElementById("roleFilter").addEventListener("change", function () {
-    const value = this.value;
-
-    const filtered = value
-        ? enquiriesData.filter(item => item.requirementType === value)
-        : enquiriesData;
-
-    renderTable(filtered);
-});
-
-// =======================
-// TIMELINE FILTER
-// =======================
-document.getElementById("timelineFilter").addEventListener("change", function () {
-    const value = this.value;
-
-    const filtered = value
-        ? enquiriesData.filter(item => item.timeline === value)
-        : enquiriesData;
-
-    renderTable(filtered);
-});
-
-// =======================
-// EXPORT CSV
-// =======================
-document.getElementById("exportBtn").addEventListener("click", function () {
-    let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline\n";
-
-    enquiriesData.forEach(item => {
-        csv += `${item.companyName},${item.contactPerson},${item.phone},${item.requirementType},${item.numberOfStaff},${item.location},${item.timeline}\n`;
-    });
-
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "client-enquiries.csv";
-    a.click();
 });
 
 // =======================
@@ -133,19 +106,11 @@ document.getElementById("exportBtn").addEventListener("click", function () {
 document.getElementById("deleteBtn").addEventListener("click", async function () {
     const checked = document.querySelectorAll("input[type='checkbox']:checked");
 
-    if (!checked.length) {
-        alert("Select records to delete");
-        return;
-    }
-
     for (let box of checked) {
         const id = box.getAttribute("data-id");
 
         await fetch(`${API_BASE}/client-enquiries/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": "Basic " + auth
-            }
+            method: "DELETE"
         });
     }
 
