@@ -18,17 +18,26 @@ body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
 
 <nav class="bg-blue-700 text-white px-6 py-4 flex justify-between items-center shadow-md">
     <h1 class="text-xl font-bold">Staffnexa Admin</h1>
+    <button onclick="logout()" class="bg-blue-500 px-4 py-1 rounded">Logout</button>
 </nav>
 
 <main class="max-w-7xl mx-auto px-4 py-8">
 
-<h2 class="text-2xl font-bold mb-6">Client Enquiries</h2>
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">Client Enquiries</h2>
+
+    <button onclick="exportCSV()" class="bg-white border px-4 py-2 rounded shadow">
+        Export CSV
+    </button>
+</div>
 
 <!-- FILTER -->
 <div class="bg-white p-4 rounded-xl border mb-6 flex gap-4">
-    <input id="companySearch" onkeyup="filterTable()" placeholder="Search..."
+
+    <input id="companySearch" onkeyup="filterTable()"
+        placeholder="Search..."
         class="border p-2 rounded w-full"/>
-        
+
     <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded">
         <option value="">All Roles</option>
         <option>Pantry</option>
@@ -36,14 +45,13 @@ body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
         <option>Security</option>
     </select>
 
-    <button onclick="exportCSV()" class="bg-white border px-4 py-2 rounded shadow">
-        Export CSV
-    </button>
 </div>
 
 <!-- TABLE -->
 <div class="bg-white rounded-xl border overflow-hidden">
-<table class="min-w-full" id="enquiryTable">
+
+<div class="overflow-x-auto">
+<table class="min-w-full">
 
 <thead class="bg-gray-50 text-gray-500 text-sm">
 <tr>
@@ -56,9 +64,11 @@ body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
 </tr>
 </thead>
 
-<tbody id="tableBody"></tbody>
+<tbody id="tableBody" class="divide-y"></tbody>
 
 </table>
+</div>
+
 </div>
 
 </main>
@@ -68,22 +78,29 @@ body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
 const API_BASE = "https://staffnexa-backend.onrender.com";
 let enquiriesData = [];
 
-lucide.createIcons();
-
 // =======================
 // LOAD DATA
 // =======================
 async function loadEnquiries() {
-    const res = await fetch(`${API_BASE}/client-enquiries`, { cache: "no-store" });
-    const data = await res.json();
+    try {
+        const res = await fetch(`${API_BASE}/client-enquiries`, {
+            cache: "no-store"
+        });
 
-    enquiriesData = Array.isArray(data) ? data : [];
+        const data = await res.json();
 
-    renderTable(enquiriesData);
+        enquiriesData = Array.isArray(data) ? data : [];
+
+        renderTable(enquiriesData);
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load data");
+    }
 }
 
 // =======================
-// RENDER TABLE
+// RENDER TABLE (NO UI CHANGE)
 // =======================
 function renderTable(data) {
 
@@ -91,7 +108,13 @@ function renderTable(data) {
     tableBody.innerHTML = "";
 
     if (!data.length) {
-        tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">No data</td></tr>`;
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                    No enquiries found
+                </td>
+            </tr>
+        `;
         return;
     }
 
@@ -109,7 +132,7 @@ function renderTable(data) {
 
             <td class="px-6 py-4">
                 <div class="flex items-center">
-                    <div class="h-8 w-8 bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold rounded">
+                    <div class="h-8 w-8 rounded bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-bold">
                         ${initials}
                     </div>
                     <div class="ml-3">
@@ -138,19 +161,24 @@ function renderTable(data) {
             </td>
 
             <td class="px-6 py-4">
-                <select onchange="updateStatus('${item._id}', this.value)" class="border p-1 rounded">
-                    <option ${item.status==="New"?"selected":""}>New</option>
-                    <option ${item.status==="Contacted"?"selected":""}>Contacted</option>
-                    <option ${item.status==="In Progress"?"selected":""}>In Progress</option>
-                    <option ${item.status==="Closed"?"selected":""}>Closed</option>
+                <select onchange="updateStatus('${item._id}', this.value)"
+                    class="border p-1 rounded">
+                    
+                    <option ${item.status === "New" ? "selected" : ""}>New</option>
+                    <option ${item.status === "Contacted" ? "selected" : ""}>Contacted</option>
+                    <option ${item.status === "In Progress" ? "selected" : ""}>In Progress</option>
+                    <option ${item.status === "Closed" ? "selected" : ""}>Closed</option>
                 </select>
             </td>
 
             <td class="px-6 py-4 text-right">
-                <button onclick="deleteRow('${item._id}')" class="text-red-600">Delete</button>
+                <button onclick="deleteRow('${item._id}')" class="text-red-600">
+                    Delete
+                </button>
             </td>
 
-        </tr>`;
+        </tr>
+        `;
     });
 }
 
@@ -163,9 +191,13 @@ function filterTable() {
     const role = document.getElementById("roleFilter").value.toLowerCase();
 
     const filtered = enquiriesData.filter(item => {
-        return (item.companyName.toLowerCase().includes(search) ||
-                item.contactPerson.toLowerCase().includes(search)) &&
-               (role === "" || item.requirementType.toLowerCase().includes(role));
+
+        const company = (item.companyName || "").toLowerCase();
+        const contact = (item.contactPerson || "").toLowerCase();
+        const r = (item.requirementType || "").toLowerCase();
+
+        return (company.includes(search) || contact.includes(search)) &&
+               (role === "" || r.includes(role));
     });
 
     renderTable(filtered);
@@ -175,9 +207,12 @@ function filterTable() {
 // DELETE
 // =======================
 async function deleteRow(id) {
+
     if (!confirm("Delete this enquiry?")) return;
 
-    await fetch(`${API_BASE}/client-enquiries/${id}`, { method: "DELETE" });
+    await fetch(`${API_BASE}/client-enquiries/${id}`, {
+        method: "DELETE"
+    });
 
     loadEnquiries();
 }
@@ -186,9 +221,12 @@ async function deleteRow(id) {
 // UPDATE STATUS
 // =======================
 async function updateStatus(id, status) {
+
     await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify({ status })
     });
 }
@@ -197,6 +235,7 @@ async function updateStatus(id, status) {
 // EXPORT CSV
 // =======================
 function exportCSV() {
+
     let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline,Status\n";
 
     enquiriesData.forEach(item => {
@@ -210,6 +249,14 @@ function exportCSV() {
     a.href = url;
     a.download = "client-enquiries.csv";
     a.click();
+}
+
+// =======================
+// LOGOUT
+// =======================
+function logout() {
+    localStorage.removeItem("clientAuth");
+    window.location.href = "index.html";
 }
 
 // INIT
