@@ -10,40 +10,23 @@
 <style>
 body {
     font-family: 'Inter', sans-serif;
-    background: #f4f7fb;
+    background: #eef2ff;
 }
 .card {
     background: white;
+    border-radius: 14px;
     padding: 18px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
 </style>
 </head>
 
-<body class="flex">
-
-<!-- SIDEBAR -->
-<div class="w-60 bg-gradient-to-b from-blue-700 to-indigo-700 text-white h-screen p-5">
-
-    <h2 class="text-2xl font-bold mb-8">Staffnexa</h2>
-
-    <ul class="space-y-4">
-        <li class="bg-white text-blue-700 px-3 py-2 rounded font-semibold">Dashboard</li>
-        <li class="opacity-80">Leads</li>
-        <li class="opacity-80">Candidates</li>
-        <li class="opacity-80">Settings</li>
-    </ul>
-
-</div>
-
-<!-- MAIN -->
-<div class="flex-1">
+<body>
 
 <!-- HEADER -->
-<div class="bg-white px-6 py-4 flex justify-between items-center shadow-sm">
-    <h1 class="text-lg font-semibold text-gray-700">Client Enquiries CRM</h1>
-    <button onclick="logout()" class="bg-red-500 text-white px-4 py-1 rounded">Logout</button>
+<div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 flex justify-between">
+    <h1 class="text-xl font-bold">Staffnexa CRM</h1>
+    <button onclick="logout()" class="bg-white text-blue-600 px-4 py-1 rounded">Logout</button>
 </div>
 
 <div class="p-6">
@@ -51,74 +34,38 @@ body {
 <!-- STATS -->
 <div class="grid grid-cols-4 gap-5 mb-6">
 
-<div class="card border-l-4 border-blue-500">
+<div class="card">
     <div class="text-gray-500 text-sm">Total Leads</div>
-    <div id="totalLeads" class="text-2xl font-bold text-gray-800">0</div>
+    <div id="totalLeads" class="text-3xl font-bold text-blue-600">0</div>
 </div>
 
-<div class="card border-l-4 border-blue-600">
+<div class="card">
     <div class="text-gray-500 text-sm">New</div>
-    <div id="newLeads" class="text-2xl font-bold text-blue-600">0</div>
+    <div id="newLeads" class="text-3xl font-bold text-blue-500">0</div>
 </div>
 
-<div class="card border-l-4 border-yellow-500">
+<div class="card">
     <div class="text-gray-500 text-sm">Contacted</div>
-    <div id="contactedLeads" class="text-2xl font-bold text-yellow-500">0</div>
+    <div id="contactedLeads" class="text-3xl font-bold text-yellow-500">0</div>
 </div>
 
-<div class="card border-l-4 border-green-500">
+<div class="card">
     <div class="text-gray-500 text-sm">Closed</div>
-    <div id="closedLeads" class="text-2xl font-bold text-green-600">0</div>
+    <div id="closedLeads" class="text-3xl font-bold text-green-600">0</div>
 </div>
 
 </div>
 
-<!-- FILTER -->
-<div class="card mb-6 flex gap-4 items-center">
-
-<input id="companySearch" onkeyup="filterTable()"
-    placeholder="Search company..."
-    class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400"/>
-
-<select id="roleFilter" onchange="filterTable()" class="border p-2 rounded">
-    <option value="">All Roles</option>
-    <option>Pantry</option>
-    <option>Housekeeping</option>
-    <option>Security</option>
-</select>
-
-<button onclick="exportCSV()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-    Export
-</button>
-
+<!-- SEARCH -->
+<div class="card mb-6">
+    <input id="companySearch" onkeyup="filterTable()"
+        placeholder="Search company or contact..."
+        class="w-full p-3 border rounded focus:ring-2 focus:ring-blue-400">
 </div>
 
-<!-- TABLE -->
-<div class="card overflow-x-auto">
+<!-- LEADS GRID -->
+<div id="leadContainer" class="grid grid-cols-3 gap-5"></div>
 
-<table class="min-w-full">
-
-<thead class="text-gray-600 text-sm border-b">
-<tr>
-<th class="py-3 text-left">Company</th>
-<th class="py-3 text-left">Contact</th>
-<th class="py-3 text-left">Requirement</th>
-<th class="py-3 text-left">Timeline</th>
-<th class="py-3 text-left">Status</th>
-<th class="py-3 text-left">Priority</th>
-<th class="py-3 text-left">Assigned</th>
-<th class="py-3 text-left">Follow-up</th>
-<th class="py-3 text-right">Action</th>
-</tr>
-</thead>
-
-<tbody id="tableBody"></tbody>
-
-</table>
-
-</div>
-
-</div>
 </div>
 
 <script>
@@ -137,7 +84,7 @@ async function loadEnquiries() {
         enquiriesData = Array.isArray(data) ? data : [];
 
         updateStats(enquiriesData);
-        renderTable(enquiriesData);
+        renderCards(enquiriesData);
 
     } catch (err) {
         console.error(err);
@@ -145,39 +92,9 @@ async function loadEnquiries() {
 }
 
 // =======================
-// FOLLOW-UP COLOR
-// =======================
-function getFollowUpColor(date) {
-
-    if (!date) return "";
-
-    const today = new Date().toISOString().split("T")[0];
-    const d = new Date(date).toISOString().split("T")[0];
-
-    if (d < today) return "bg-red-100";      // overdue
-    if (d === today) return "bg-yellow-100"; // today
-
-    return "";
-}
-
-// =======================
 // STATS
 // =======================
 function updateStats(data) {
-
-    const today = new Date().toISOString().split("T")[0];
-
-    let overdue = 0;
-    let todayCount = 0;
-
-    data.forEach(item => {
-        if (!item.followUpDate) return;
-
-        const d = new Date(item.followUpDate).toISOString().split("T")[0];
-
-        if (d < today) overdue++;
-        if (d === today) todayCount++;
-    });
 
     document.getElementById("totalLeads").innerText = data.length;
 
@@ -189,104 +106,98 @@ function updateStats(data) {
 
     document.getElementById("closedLeads").innerText =
         data.filter(d => d.status === "Closed").length;
-
-    console.log("Overdue:", overdue, "Today:", todayCount);
 }
 
 // =======================
-// STATUS COLOR
+// COLORS
 // =======================
-function getStatusColor(status) {
+function statusColor(status) {
     if (status === "New") return "bg-blue-100 text-blue-700";
     if (status === "Contacted") return "bg-yellow-100 text-yellow-700";
     if (status === "Closed") return "bg-green-100 text-green-700";
     return "bg-gray-100";
 }
 
-function getPriorityColor(priority) {
+function priorityColor(priority) {
     if (priority === "Hot") return "bg-red-100 text-red-600";
     if (priority === "Warm") return "bg-yellow-100 text-yellow-700";
     return "bg-gray-100";
 }
 
 // =======================
-// TABLE
+// CARDS UI
 // =======================
-function renderTable(data) {
+function renderCards(data) {
 
-    const tableBody = document.getElementById("tableBody");
-    tableBody.innerHTML = "";
+    const container = document.getElementById("leadContainer");
+    container.innerHTML = "";
 
     if (!data.length) {
-        tableBody.innerHTML = `
-        <tr>
-            <td colspan="9" class="text-center py-4">No data found</td>
-        </tr>`;
+        container.innerHTML = "<p>No data found</p>";
         return;
     }
 
     data.forEach(item => {
 
-        const rowColor = getFollowUpColor(item.followUpDate);
+        container.innerHTML += `
+        <div class="card">
 
-        tableBody.innerHTML += `
-        <tr class="border-b hover:bg-gray-50 ${rowColor}">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="font-semibold text-lg">${item.companyName}</h3>
+                <span class="px-2 py-1 rounded text-xs ${priorityColor(item.priority)}">
+                    ${item.priority || "Warm"}
+                </span>
+            </div>
 
-            <td class="py-3 font-semibold">${item.companyName || ""}</td>
+            <div class="text-sm text-gray-600 mb-2">
+                ${item.contactPerson} • ${item.phone}
+            </div>
 
-            <td class="py-3">
-                ${item.contactPerson || ""}
-                <div class="text-xs text-gray-500">${item.phone || ""}</div>
-            </td>
+            <div class="text-sm mb-2">
+                ${item.requirementType} (${item.numberOfStaff})
+            </div>
 
-            <td class="py-3">
-                ${item.requirementType || ""} (${item.numberOfStaff || 0})
-            </td>
+            <div class="text-sm mb-3 text-gray-500">
+                ${item.location || ""}
+            </div>
 
-            <td class="py-3">${item.timeline || ""}</td>
+            <div class="flex justify-between items-center mb-3">
+                <span class="px-2 py-1 rounded text-xs ${statusColor(item.status)}">
+                    ${item.status}
+                </span>
 
-            <td class="py-3">
+                <input type="date"
+                    value="${item.followUpDate ? item.followUpDate.split('T')[0] : ''}"
+                    onchange="updateFollowUp('${item._id}', this.value)"
+                    class="border p-1 rounded text-xs"/>
+            </div>
+
+            <div class="flex gap-2">
+
                 <select onchange="updateStatus('${item._id}', this.value)"
-                    class="border rounded p-1 ${getStatusColor(item.status)}">
+                    class="border p-1 rounded text-xs w-full">
                     <option ${item.status==="New"?"selected":""}>New</option>
                     <option ${item.status==="Contacted"?"selected":""}>Contacted</option>
                     <option ${item.status==="In Progress"?"selected":""}>In Progress</option>
                     <option ${item.status==="Closed"?"selected":""}>Closed</option>
                 </select>
-            </td>
 
-            <td class="py-3">
                 <select onchange="updatePriority('${item._id}', this.value)"
-                    class="border rounded p-1 ${getPriorityColor(item.priority)}">
-                    <option ${item.priority==="Hot"?"selected":""}>Hot 🔥</option>
+                    class="border p-1 rounded text-xs w-full">
+                    <option ${item.priority==="Hot"?"selected":""}>Hot</option>
                     <option ${item.priority==="Warm"?"selected":""}>Warm</option>
                     <option ${item.priority==="Cold"?"selected":""}>Cold</option>
                 </select>
-            </td>
 
-            <td class="py-3">
-                <select onchange="assignRecruiter('${item._id}', this.value)" class="border rounded p-1">
-                    <option ${item.assignedTo==="Unassigned"?"selected":""}>Unassigned</option>
-                    <option ${item.assignedTo==="Rahul"?"selected":""}>Rahul</option>
-                    <option ${item.assignedTo==="Ankit"?"selected":""}>Ankit</option>
-                </select>
-            </td>
+            </div>
 
-            <td class="py-3">
-                <input type="date"
-                    value="${item.followUpDate ? item.followUpDate.split('T')[0] : ''}"
-                    onchange="updateFollowUp('${item._id}', this.value)"
-                    class="border p-1 rounded"/>
-            </td>
+            <button onclick="deleteRow('${item._id}')"
+                class="mt-3 text-red-500 text-sm">
+                Delete
+            </button>
 
-            <td class="py-3 text-right">
-                <button onclick="deleteRow('${item._id}')"
-                    class="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200">
-                    Delete
-                </button>
-            </td>
-
-        </tr>`;
+        </div>
+        `;
     });
 }
 
@@ -296,103 +207,45 @@ function renderTable(data) {
 function filterTable() {
 
     const search = document.getElementById("companySearch").value.toLowerCase();
-    const role = document.getElementById("roleFilter").value.toLowerCase();
 
-    const filtered = enquiriesData.filter(item => {
+    const filtered = enquiriesData.filter(item =>
+        item.companyName.toLowerCase().includes(search) ||
+        item.contactPerson.toLowerCase().includes(search)
+    );
 
-        return (item.companyName.toLowerCase().includes(search) ||
-                item.contactPerson.toLowerCase().includes(search)) &&
-               (role === "" || item.requirementType.toLowerCase().includes(role));
-    });
-
-    renderTable(filtered);
+    renderCards(filtered);
 }
 
 // =======================
-// DELETE
+// ACTIONS
 // =======================
 async function deleteRow(id) {
-
-    if (!confirm("Delete this enquiry?")) return;
-
-    await fetch(`${API_BASE}/client-enquiries/${id}`, {
-        method: "DELETE"
-    });
-
+    await fetch(`${API_BASE}/client-enquiries/${id}`, { method: "DELETE" });
     loadEnquiries();
 }
 
-// =======================
-// STATUS
-// =======================
 async function updateStatus(id, status) {
-
     await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ status })
     });
-
-    loadEnquiries();
 }
 
-// =======================
-// PRIORITY
-// =======================
 async function updatePriority(id, priority) {
-
     await fetch(`${API_BASE}/client-enquiries/${id}/priority`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ priority })
     });
-
 }
 
-// =======================
-// ASSIGN
-// =======================
-async function assignRecruiter(id, assignedTo) {
-
-    await fetch(`${API_BASE}/client-enquiries/${id}/assign`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assignedTo })
-    });
-
-}
-
-// =======================
-// FOLLOW-UP
-// =======================
 async function updateFollowUp(id, followUpDate) {
-
     await fetch(`${API_BASE}/client-enquiries/${id}/followup`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ followUpDate })
     });
-
-}
-
-// =======================
-// EXPORT
-// =======================
-function exportCSV() {
-
-    let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline,Status,Priority,Assigned\n";
-
-    enquiriesData.forEach(item => {
-        csv += `${item.companyName},${item.contactPerson},${item.phone},${item.requirementType},${item.numberOfStaff},${item.location},${item.timeline},${item.status},${item.priority},${item.assignedTo}\n`;
-    });
-
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "client-enquiries.csv";
-    a.click();
 }
 
 // =======================
