@@ -1,107 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Staffnexa Admin</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staffnexa Admin — Client Enquiries</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-body {
-    font-family: 'Inter', sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
 </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="min-h-screen">
 
-<!-- HEADER -->
-<header class="bg-blue-700 text-white px-6 py-4 flex justify-between items-center">
-    <h1 class="text-lg font-semibold">Staffnexa Admin</h1>
-    <button onclick="logout()" class="bg-blue-500 px-4 py-1 rounded">Logout</button>
-</header>
+<nav class="bg-blue-700 text-white px-6 py-4 flex justify-between items-center shadow-md">
+    <h1 class="text-xl font-bold">Staffnexa Admin</h1>
+</nav>
 
-<!-- MAIN -->
-<div class="max-w-6xl mx-auto mt-8">
+<main class="max-w-7xl mx-auto px-4 py-8">
 
-    <h2 class="text-xl font-semibold mb-4">Client Enquiries</h2>
+<h2 class="text-2xl font-bold mb-6">Client Enquiries</h2>
 
-    <!-- TOP BAR -->
-    <div class="flex justify-between items-center mb-4">
+<!-- FILTER -->
+<div class="bg-white p-4 rounded-xl border mb-6 flex gap-4">
+    <input id="companySearch" onkeyup="filterTable()" placeholder="Search..."
+        class="border p-2 rounded w-full"/>
+        
+    <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded">
+        <option value="">All Roles</option>
+        <option>Pantry</option>
+        <option>Housekeeping</option>
+        <option>Security</option>
+    </select>
 
-        <div class="flex gap-3 w-full">
-            <input id="companySearch" onkeyup="filterTable()"
-                type="text"
-                placeholder="Search..."
-                class="w-full border p-2 rounded"/>
-
-            <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded">
-                <option value="">All Roles</option>
-                <option>Housekeeping</option>
-                <option>Pantry</option>
-                <option>Security</option>
-            </select>
-        </div>
-
-        <button onclick="exportCSV()" class="bg-white border px-4 py-2 rounded shadow">
-            Export CSV
-        </button>
-
-    </div>
-
-    <!-- TABLE -->
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-
-        <table class="min-w-full">
-
-            <thead class="bg-gray-50 text-gray-600 text-sm">
-                <tr>
-                    <th class="px-6 py-3 text-left">Company</th>
-                    <th class="px-6 py-3 text-left">Contact</th>
-                    <th class="px-6 py-3 text-left">Requirement</th>
-                    <th class="px-6 py-3 text-left">Timeline</th>
-                    <th class="px-6 py-3 text-left">Status</th>
-                    <th class="px-6 py-3 text-right">Action</th>
-                </tr>
-            </thead>
-
-            <!-- IMPORTANT -->
-            <tbody id="tableBody" class="divide-y">
-            </tbody>
-
-        </table>
-
-    </div>
-
+    <button onclick="exportCSV()" class="bg-white border px-4 py-2 rounded shadow">
+        Export CSV
+    </button>
 </div>
 
-<!-- SCRIPT -->
+<!-- TABLE -->
+<div class="bg-white rounded-xl border overflow-hidden">
+<table class="min-w-full" id="enquiryTable">
+
+<thead class="bg-gray-50 text-gray-500 text-sm">
+<tr>
+<th class="px-6 py-3 text-left">Company</th>
+<th class="px-6 py-3 text-left">Contact</th>
+<th class="px-6 py-3 text-left">Requirement</th>
+<th class="px-6 py-3 text-left">Timeline</th>
+<th class="px-6 py-3 text-left">Status</th>
+<th class="px-6 py-3 text-right">Action</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+</div>
+
+</main>
+
 <script>
 
 const API_BASE = "https://staffnexa-backend.onrender.com";
-
 let enquiriesData = [];
+
+lucide.createIcons();
 
 // =======================
 // LOAD DATA
 // =======================
 async function loadEnquiries() {
-    try {
-        const res = await fetch(`${API_BASE}/client-enquiries`, {
-            cache: "no-store"
-        });
+    const res = await fetch(`${API_BASE}/client-enquiries`, { cache: "no-store" });
+    const data = await res.json();
 
-        const data = await res.json();
+    enquiriesData = Array.isArray(data) ? data : [];
 
-        enquiriesData = Array.isArray(data) ? data : [];
-
-        renderTable(enquiriesData);
-
-    } catch (err) {
-        console.error("Load error:", err);
-        alert("Failed to load data");
-    }
+    renderTable(enquiriesData);
 }
 
 // =======================
@@ -113,13 +91,7 @@ function renderTable(data) {
     tableBody.innerHTML = "";
 
     if (!data.length) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                    No enquiries found
-                </td>
-            </tr>
-        `;
+        tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">No data</td></tr>`;
         return;
     }
 
@@ -135,10 +107,9 @@ function renderTable(data) {
         tableBody.innerHTML += `
         <tr class="hover:bg-gray-50">
 
-            <!-- COMPANY -->
             <td class="px-6 py-4">
                 <div class="flex items-center">
-                    <div class="h-8 w-8 rounded bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-bold">
+                    <div class="h-8 w-8 bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold rounded">
                         ${initials}
                     </div>
                     <div class="ml-3">
@@ -148,13 +119,11 @@ function renderTable(data) {
                 </div>
             </td>
 
-            <!-- CONTACT -->
             <td class="px-6 py-4">
                 <div>${item.contactPerson}</div>
                 <div class="text-sm text-gray-500">${item.phone}</div>
             </td>
 
-            <!-- REQUIREMENT -->
             <td class="px-6 py-4">
                 <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">
                     ${item.requirementType}
@@ -162,35 +131,26 @@ function renderTable(data) {
                 <div class="text-xs mt-1">Staff: ${item.numberOfStaff}</div>
             </td>
 
-            <!-- TIMELINE -->
             <td class="px-6 py-4">
                 <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">
                     ${item.timeline}
                 </span>
             </td>
 
-            <!-- STATUS -->
             <td class="px-6 py-4">
-                <select onchange="updateStatus('${item._id}', this.value)"
-                    class="border p-1 rounded">
-                    
-                    <option ${item.status === "New" ? "selected" : ""}>New</option>
-                    <option ${item.status === "Contacted" ? "selected" : ""}>Contacted</option>
-                    <option ${item.status === "In Progress" ? "selected" : ""}>In Progress</option>
-                    <option ${item.status === "Closed" ? "selected" : ""}>Closed</option>
+                <select onchange="updateStatus('${item._id}', this.value)" class="border p-1 rounded">
+                    <option ${item.status==="New"?"selected":""}>New</option>
+                    <option ${item.status==="Contacted"?"selected":""}>Contacted</option>
+                    <option ${item.status==="In Progress"?"selected":""}>In Progress</option>
+                    <option ${item.status==="Closed"?"selected":""}>Closed</option>
                 </select>
             </td>
 
-            <!-- ACTION -->
             <td class="px-6 py-4 text-right">
-                <button onclick="deleteRow('${item._id}')"
-                    class="text-red-600 hover:text-red-800">
-                    Delete
-                </button>
+                <button onclick="deleteRow('${item._id}')" class="text-red-600">Delete</button>
             </td>
 
-        </tr>
-        `;
+        </tr>`;
     });
 }
 
@@ -203,13 +163,9 @@ function filterTable() {
     const role = document.getElementById("roleFilter").value.toLowerCase();
 
     const filtered = enquiriesData.filter(item => {
-
-        const company = (item.companyName || "").toLowerCase();
-        const contact = (item.contactPerson || "").toLowerCase();
-        const r = (item.requirementType || "").toLowerCase();
-
-        return (company.includes(search) || contact.includes(search)) &&
-               (role === "" || r.includes(role));
+        return (item.companyName.toLowerCase().includes(search) ||
+                item.contactPerson.toLowerCase().includes(search)) &&
+               (role === "" || item.requirementType.toLowerCase().includes(role));
     });
 
     renderTable(filtered);
@@ -219,45 +175,28 @@ function filterTable() {
 // DELETE
 // =======================
 async function deleteRow(id) {
-
     if (!confirm("Delete this enquiry?")) return;
 
-    try {
-        await fetch(`${API_BASE}/client-enquiries/${id}`, {
-            method: "DELETE"
-        });
+    await fetch(`${API_BASE}/client-enquiries/${id}`, { method: "DELETE" });
 
-        loadEnquiries();
-
-    } catch (err) {
-        console.error("Delete error:", err);
-    }
+    loadEnquiries();
 }
 
 // =======================
 // UPDATE STATUS
 // =======================
 async function updateStatus(id, status) {
-
-    try {
-        await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ status })
-        });
-
-    } catch (err) {
-        console.error("Status update error:", err);
-    }
+    await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+    });
 }
 
 // =======================
 // EXPORT CSV
 // =======================
 function exportCSV() {
-
     let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline,Status\n";
 
     enquiriesData.forEach(item => {
@@ -271,14 +210,6 @@ function exportCSV() {
     a.href = url;
     a.download = "client-enquiries.csv";
     a.click();
-}
-
-// =======================
-// LOGOUT
-// =======================
-function logout() {
-    localStorage.removeItem("clientAuth");
-    window.location.href = "index.html";
 }
 
 // INIT
