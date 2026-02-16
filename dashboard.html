@@ -145,9 +145,39 @@ async function loadEnquiries() {
 }
 
 // =======================
+// FOLLOW-UP COLOR
+// =======================
+function getFollowUpColor(date) {
+
+    if (!date) return "";
+
+    const today = new Date().toISOString().split("T")[0];
+    const d = new Date(date).toISOString().split("T")[0];
+
+    if (d < today) return "bg-red-100";      // overdue
+    if (d === today) return "bg-yellow-100"; // today
+
+    return "";
+}
+
+// =======================
 // STATS
 // =======================
 function updateStats(data) {
+
+    const today = new Date().toISOString().split("T")[0];
+
+    let overdue = 0;
+    let todayCount = 0;
+
+    data.forEach(item => {
+        if (!item.followUpDate) return;
+
+        const d = new Date(item.followUpDate).toISOString().split("T")[0];
+
+        if (d < today) overdue++;
+        if (d === today) todayCount++;
+    });
 
     document.getElementById("totalLeads").innerText = data.length;
 
@@ -159,6 +189,8 @@ function updateStats(data) {
 
     document.getElementById("closedLeads").innerText =
         data.filter(d => d.status === "Closed").length;
+
+    console.log("Overdue:", overdue, "Today:", todayCount);
 }
 
 // =======================
@@ -195,8 +227,10 @@ function renderTable(data) {
 
     data.forEach(item => {
 
+        const rowColor = getFollowUpColor(item.followUpDate);
+
         tableBody.innerHTML += `
-        <tr class="border-b hover:bg-gray-50">
+        <tr class="border-b hover:bg-gray-50 ${rowColor}">
 
             <td class="py-3 font-semibold">${item.companyName || ""}</td>
 
@@ -211,7 +245,6 @@ function renderTable(data) {
 
             <td class="py-3">${item.timeline || ""}</td>
 
-            <!-- STATUS -->
             <td class="py-3">
                 <select onchange="updateStatus('${item._id}', this.value)"
                     class="border rounded p-1 ${getStatusColor(item.status)}">
@@ -222,7 +255,6 @@ function renderTable(data) {
                 </select>
             </td>
 
-            <!-- PRIORITY -->
             <td class="py-3">
                 <select onchange="updatePriority('${item._id}', this.value)"
                     class="border rounded p-1 ${getPriorityColor(item.priority)}">
@@ -232,7 +264,6 @@ function renderTable(data) {
                 </select>
             </td>
 
-            <!-- ASSIGN -->
             <td class="py-3">
                 <select onchange="assignRecruiter('${item._id}', this.value)" class="border rounded p-1">
                     <option ${item.assignedTo==="Unassigned"?"selected":""}>Unassigned</option>
@@ -241,7 +272,6 @@ function renderTable(data) {
                 </select>
             </td>
 
-            <!-- FOLLOW-UP -->
             <td class="py-3">
                 <input type="date"
                     value="${item.followUpDate ? item.followUpDate.split('T')[0] : ''}"
@@ -249,7 +279,6 @@ function renderTable(data) {
                     class="border p-1 rounded"/>
             </td>
 
-            <!-- DELETE -->
             <td class="py-3 text-right">
                 <button onclick="deleteRow('${item._id}')"
                     class="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200">
