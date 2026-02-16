@@ -3,104 +3,143 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Staffnexa Admin — Client Enquiries</title>
+<title>Staffnexa Admin</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
 </style>
 </head>
 
-<body class="min-h-screen">
+<body>
 
-<nav class="bg-blue-700 text-white px-6 py-4 flex justify-between items-center shadow-md">
-    <h1 class="text-xl font-bold">Staffnexa Admin</h1>
-    <button onclick="logout()" class="bg-blue-500 px-4 py-1 rounded">Logout</button>
-</nav>
+<!-- HEADER -->
+<header class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-4 flex justify-between items-center">
+    <h1 class="text-xl font-semibold">Staffnexa Admin</h1>
+    <button onclick="logout()" class="bg-white text-blue-600 px-4 py-1 rounded">Logout</button>
+</header>
 
-<main class="max-w-7xl mx-auto px-4 py-8">
+<!-- MAIN -->
+<div class="max-w-7xl mx-auto px-4 py-8">
 
-<div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-bold">Client Enquiries</h2>
+<h2 class="text-2xl font-bold mb-6">Client Enquiries Dashboard</h2>
 
-    <button onclick="exportCSV()" class="bg-white border px-4 py-2 rounded shadow">
-        Export CSV
-    </button>
+<!-- STATS -->
+<div class="grid grid-cols-4 gap-4 mb-6">
+
+<div class="card">
+    <div class="text-gray-500">Total Leads</div>
+    <div id="totalLeads" class="text-2xl font-bold">0</div>
+</div>
+
+<div class="card">
+    <div class="text-gray-500">New</div>
+    <div id="newLeads" class="text-2xl font-bold text-blue-600">0</div>
+</div>
+
+<div class="card">
+    <div class="text-gray-500">Contacted</div>
+    <div id="contactedLeads" class="text-2xl font-bold text-yellow-500">0</div>
+</div>
+
+<div class="card">
+    <div class="text-gray-500">Closed</div>
+    <div id="closedLeads" class="text-2xl font-bold text-green-600">0</div>
+</div>
+
 </div>
 
 <!-- FILTER -->
-<div class="bg-white p-4 rounded-xl border mb-6 flex gap-4">
+<div class="card mb-6 flex gap-4">
 
-    <input id="companySearch" onkeyup="filterTable()"
-        placeholder="Search..."
-        class="border p-2 rounded w-full"/>
+<input id="companySearch" onkeyup="filterTable()" placeholder="Search..."
+    class="border p-2 rounded w-full"/>
 
-    <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded">
-        <option value="">All Roles</option>
-        <option>Pantry</option>
-        <option>Housekeeping</option>
-        <option>Security</option>
-    </select>
+<select id="roleFilter" onchange="filterTable()" class="border p-2 rounded">
+    <option value="">All Roles</option>
+    <option>Pantry</option>
+    <option>Housekeeping</option>
+    <option>Security</option>
+</select>
+
+<button onclick="exportCSV()" class="bg-indigo-600 text-white px-4 py-2 rounded">
+    Export
+</button>
 
 </div>
 
 <!-- TABLE -->
-<div class="bg-white rounded-xl border overflow-hidden">
+<div class="card">
 
-<div class="overflow-x-auto">
 <table class="min-w-full">
 
-<thead class="bg-gray-50 text-gray-500 text-sm">
+<thead class="bg-gray-100 text-gray-600 text-sm">
 <tr>
-<th class="px-6 py-3 text-left">Company</th>
-<th class="px-6 py-3 text-left">Contact</th>
-<th class="px-6 py-3 text-left">Requirement</th>
-<th class="px-6 py-3 text-left">Timeline</th>
-<th class="px-6 py-3 text-left">Status</th>
-<th class="px-6 py-3 text-right">Action</th>
+<th class="px-4 py-3 text-left">Company</th>
+<th class="px-4 py-3 text-left">Contact</th>
+<th class="px-4 py-3 text-left">Requirement</th>
+<th class="px-4 py-3 text-left">Timeline</th>
+<th class="px-4 py-3 text-left">Status</th>
+<th class="px-4 py-3 text-right">Action</th>
 </tr>
 </thead>
 
 <tbody id="tableBody" class="divide-y"></tbody>
 
 </table>
-</div>
 
 </div>
 
-</main>
+</div>
 
 <script>
 
 const API_BASE = "https://staffnexa-backend.onrender.com";
+
 let enquiriesData = [];
 
 // =======================
 // LOAD DATA
 // =======================
 async function loadEnquiries() {
-    try {
-        const res = await fetch(`${API_BASE}/client-enquiries`, {
-            cache: "no-store"
-        });
+    const res = await fetch(`${API_BASE}/client-enquiries`, { cache: "no-store" });
+    const data = await res.json();
 
-        const data = await res.json();
+    enquiriesData = Array.isArray(data) ? data : [];
 
-        enquiriesData = Array.isArray(data) ? data : [];
-
-        renderTable(enquiriesData);
-
-    } catch (err) {
-        console.error(err);
-        alert("Failed to load data");
-    }
+    updateStats(enquiriesData);
+    renderTable(enquiriesData);
 }
 
 // =======================
-// RENDER TABLE (NO UI CHANGE)
+// STATS
+// =======================
+function updateStats(data) {
+
+    document.getElementById("totalLeads").innerText = data.length;
+
+    document.getElementById("newLeads").innerText =
+        data.filter(d => d.status === "New").length;
+
+    document.getElementById("contactedLeads").innerText =
+        data.filter(d => d.status === "Contacted").length;
+
+    document.getElementById("closedLeads").innerText =
+        data.filter(d => d.status === "Closed").length;
+}
+
+// =======================
+// RENDER TABLE
 // =======================
 function renderTable(data) {
 
@@ -108,73 +147,41 @@ function renderTable(data) {
     tableBody.innerHTML = "";
 
     if (!data.length) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-                    No enquiries found
-                </td>
-            </tr>
-        `;
+        tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">No data</td></tr>`;
         return;
     }
 
     data.forEach(item => {
 
-        const initials = (item.companyName || "NA")
-            .split(" ")
-            .map(w => w[0])
-            .join("")
-            .substring(0,2)
-            .toUpperCase();
-
         tableBody.innerHTML += `
-        <tr class="hover:bg-gray-50">
+        <tr>
 
-            <td class="px-6 py-4">
-                <div class="flex items-center">
-                    <div class="h-8 w-8 rounded bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-bold">
-                        ${initials}
-                    </div>
-                    <div class="ml-3">
-                        <div class="font-semibold">${item.companyName}</div>
-                        <div class="text-xs text-gray-500">${item.location}</div>
-                    </div>
-                </div>
+            <td class="px-4 py-3 font-semibold">${item.companyName}</td>
+
+            <td class="px-4 py-3">
+                ${item.contactPerson}
+                <div class="text-xs text-gray-500">${item.phone}</div>
             </td>
 
-            <td class="px-6 py-4">
-                <div>${item.contactPerson}</div>
-                <div class="text-sm text-gray-500">${item.phone}</div>
+            <td class="px-4 py-3">
+                ${item.requirementType} (${item.numberOfStaff})
             </td>
 
-            <td class="px-6 py-4">
-                <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">
-                    ${item.requirementType}
-                </span>
-                <div class="text-xs mt-1">Staff: ${item.numberOfStaff}</div>
-            </td>
+            <td class="px-4 py-3">${item.timeline}</td>
 
-            <td class="px-6 py-4">
-                <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">
-                    ${item.timeline}
-                </span>
-            </td>
+            <td class="px-4 py-3">
+                <select onchange="updateStatus('${item._id}', this.value)" class="border rounded p-1">
 
-            <td class="px-6 py-4">
-                <select onchange="updateStatus('${item._id}', this.value)"
-                    class="border p-1 rounded">
-                    
                     <option ${item.status === "New" ? "selected" : ""}>New</option>
                     <option ${item.status === "Contacted" ? "selected" : ""}>Contacted</option>
                     <option ${item.status === "In Progress" ? "selected" : ""}>In Progress</option>
                     <option ${item.status === "Closed" ? "selected" : ""}>Closed</option>
+
                 </select>
             </td>
 
-            <td class="px-6 py-4 text-right">
-                <button onclick="deleteRow('${item._id}')" class="text-red-600">
-                    Delete
-                </button>
+            <td class="px-4 py-3 text-right">
+                <button onclick="deleteRow('${item._id}')" class="text-red-600">Delete</button>
             </td>
 
         </tr>
@@ -192,12 +199,9 @@ function filterTable() {
 
     const filtered = enquiriesData.filter(item => {
 
-        const company = (item.companyName || "").toLowerCase();
-        const contact = (item.contactPerson || "").toLowerCase();
-        const r = (item.requirementType || "").toLowerCase();
-
-        return (company.includes(search) || contact.includes(search)) &&
-               (role === "" || r.includes(role));
+        return (item.companyName.toLowerCase().includes(search) ||
+                item.contactPerson.toLowerCase().includes(search)) &&
+               (role === "" || item.requirementType.toLowerCase().includes(role));
     });
 
     renderTable(filtered);
@@ -207,35 +211,30 @@ function filterTable() {
 // DELETE
 // =======================
 async function deleteRow(id) {
-
     if (!confirm("Delete this enquiry?")) return;
 
-    await fetch(`${API_BASE}/client-enquiries/${id}`, {
-        method: "DELETE"
+    await fetch(`${API_BASE}/client-enquiries/${id}`, { method: "DELETE" });
+
+    loadEnquiries();
+}
+
+// =======================
+// STATUS UPDATE
+// =======================
+async function updateStatus(id, status) {
+    await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
     });
 
     loadEnquiries();
 }
 
 // =======================
-// UPDATE STATUS
-// =======================
-async function updateStatus(id, status) {
-
-    await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ status })
-    });
-}
-
-// =======================
-// EXPORT CSV
+// EXPORT
 // =======================
 function exportCSV() {
-
     let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline,Status\n";
 
     enquiriesData.forEach(item => {
