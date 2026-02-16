@@ -117,27 +117,28 @@ body {
 </div>
 
 <script>
-// FORCE NO CACHE
-const fetchOptions = {
-    cache: "no-store"
-};
 
 const API_BASE = "https://staffnexa-backend.onrender.com";
 
 let enquiriesData = [];
 
 // =======================
-// LOAD DATA
+// LOAD DATA (NO CACHE)
 // =======================
 async function loadEnquiries() {
     try {
-        const res = await fetch(`${API_BASE}/client-enquiries?ts=` + new Date().getTime(), {
-            cache: "no-store"
+        const url = `${API_BASE}/client-enquiries?time=${Date.now()}`;
+
+        const res = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Cache-Control": "no-cache"
+            }
         });
 
         const data = await res.json();
 
-        console.log("API DATA:", data);
+        console.log("DATA:", data);
 
         enquiriesData = Array.isArray(data) ? data : [];
 
@@ -145,10 +146,9 @@ async function loadEnquiries() {
         renderTable(enquiriesData);
 
     } catch (err) {
-        console.error("Load error:", err);
+        console.error(err);
     }
 }
-
 
 // =======================
 // STATS
@@ -292,7 +292,9 @@ function logout() {
     window.location.href = "index.html";
 }
 
+// =======================
 // INIT
+// =======================
 loadEnquiries();
 
 </script>
