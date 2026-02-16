@@ -10,13 +10,13 @@
 <style>
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f3f4f6;
+    background: #f4f7fb;
 }
 .card {
     background: white;
-    padding: 16px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 </style>
 </head>
@@ -24,59 +24,61 @@ body {
 <body class="flex">
 
 <!-- SIDEBAR -->
-<div class="w-56 bg-white border-r h-screen p-4">
-    <h2 class="text-lg font-bold mb-6">Staffnexa</h2>
+<div class="w-60 bg-gradient-to-b from-blue-700 to-indigo-700 text-white h-screen p-5">
 
-    <ul class="space-y-3 text-gray-600">
-        <li class="font-semibold text-blue-600">Dashboard</li>
-        <li>Leads</li>
-        <li>Candidates</li>
-        <li>Settings</li>
+    <h2 class="text-2xl font-bold mb-8">Staffnexa</h2>
+
+    <ul class="space-y-4">
+        <li class="bg-white text-blue-700 px-3 py-2 rounded font-semibold">Dashboard</li>
+        <li class="opacity-80">Leads</li>
+        <li class="opacity-80">Candidates</li>
+        <li class="opacity-80">Settings</li>
     </ul>
+
 </div>
 
 <!-- MAIN -->
 <div class="flex-1">
 
 <!-- HEADER -->
-<div class="bg-white border-b px-6 py-4 flex justify-between">
-    <h1 class="font-semibold">Client Enquiries</h1>
-    <button onclick="logout()" class="text-red-500">Logout</button>
+<div class="bg-white px-6 py-4 flex justify-between items-center shadow-sm">
+    <h1 class="text-lg font-semibold text-gray-700">Client Enquiries CRM</h1>
+    <button onclick="logout()" class="bg-red-500 text-white px-4 py-1 rounded">Logout</button>
 </div>
 
 <div class="p-6">
 
 <!-- STATS -->
-<div class="grid grid-cols-4 gap-4 mb-6">
+<div class="grid grid-cols-4 gap-5 mb-6">
 
-<div class="card">
-    <div class="text-sm text-gray-500">Total Leads</div>
-    <div id="totalLeads" class="text-xl font-bold">0</div>
+<div class="card border-l-4 border-blue-500">
+    <div class="text-gray-500 text-sm">Total Leads</div>
+    <div id="totalLeads" class="text-2xl font-bold text-gray-800">0</div>
 </div>
 
-<div class="card">
-    <div class="text-sm text-gray-500">New</div>
-    <div id="newLeads" class="text-xl font-bold text-blue-600">0</div>
+<div class="card border-l-4 border-blue-600">
+    <div class="text-gray-500 text-sm">New</div>
+    <div id="newLeads" class="text-2xl font-bold text-blue-600">0</div>
 </div>
 
-<div class="card">
-    <div class="text-sm text-gray-500">Contacted</div>
-    <div id="contactedLeads" class="text-xl font-bold text-yellow-500">0</div>
+<div class="card border-l-4 border-yellow-500">
+    <div class="text-gray-500 text-sm">Contacted</div>
+    <div id="contactedLeads" class="text-2xl font-bold text-yellow-500">0</div>
 </div>
 
-<div class="card">
-    <div class="text-sm text-gray-500">Closed</div>
-    <div id="closedLeads" class="text-xl font-bold text-green-600">0</div>
+<div class="card border-l-4 border-green-500">
+    <div class="text-gray-500 text-sm">Closed</div>
+    <div id="closedLeads" class="text-2xl font-bold text-green-600">0</div>
 </div>
 
 </div>
 
 <!-- FILTER -->
-<div class="card mb-6 flex gap-4">
+<div class="card mb-6 flex gap-4 items-center">
 
 <input id="companySearch" onkeyup="filterTable()"
     placeholder="Search company..."
-    class="border p-2 rounded w-full"/>
+    class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400"/>
 
 <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded">
     <option value="">All Roles</option>
@@ -85,7 +87,7 @@ body {
     <option>Security</option>
 </select>
 
-<button onclick="exportCSV()" class="bg-blue-600 text-white px-4 py-2 rounded">
+<button onclick="exportCSV()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
     Export
 </button>
 
@@ -98,12 +100,15 @@ body {
 
 <thead class="text-gray-600 text-sm border-b">
 <tr>
-<th class="py-2 text-left">Company</th>
-<th class="py-2 text-left">Contact</th>
-<th class="py-2 text-left">Requirement</th>
-<th class="py-2 text-left">Timeline</th>
-<th class="py-2 text-left">Status</th>
-<th class="py-2 text-right">Action</th>
+<th class="py-3 text-left">Company</th>
+<th class="py-3 text-left">Contact</th>
+<th class="py-3 text-left">Requirement</th>
+<th class="py-3 text-left">Timeline</th>
+<th class="py-3 text-left">Status</th>
+<th class="py-3 text-left">Priority</th>
+<th class="py-3 text-left">Assigned</th>
+<th class="py-3 text-left">Follow-up</th>
+<th class="py-3 text-right">Action</th>
 </tr>
 </thead>
 
@@ -119,26 +124,15 @@ body {
 <script>
 
 const API_BASE = "https://staffnexa-backend.onrender.com";
-
 let enquiriesData = [];
 
 // =======================
-// LOAD DATA (NO CACHE)
+// LOAD DATA
 // =======================
 async function loadEnquiries() {
     try {
-        const url = `${API_BASE}/client-enquiries?time=${Date.now()}`;
-
-        const res = await fetch(url, {
-            method: "GET",
-            headers: {
-                "Cache-Control": "no-cache"
-            }
-        });
-
+        const res = await fetch(`${API_BASE}/client-enquiries?time=${Date.now()}`);
         const data = await res.json();
-
-        console.log("DATA:", data);
 
         enquiriesData = Array.isArray(data) ? data : [];
 
@@ -168,6 +162,22 @@ function updateStats(data) {
 }
 
 // =======================
+// STATUS COLOR
+// =======================
+function getStatusColor(status) {
+    if (status === "New") return "bg-blue-100 text-blue-700";
+    if (status === "Contacted") return "bg-yellow-100 text-yellow-700";
+    if (status === "Closed") return "bg-green-100 text-green-700";
+    return "bg-gray-100";
+}
+
+function getPriorityColor(priority) {
+    if (priority === "Hot") return "bg-red-100 text-red-600";
+    if (priority === "Warm") return "bg-yellow-100 text-yellow-700";
+    return "bg-gray-100";
+}
+
+// =======================
 // TABLE
 // =======================
 function renderTable(data) {
@@ -178,7 +188,7 @@ function renderTable(data) {
     if (!data.length) {
         tableBody.innerHTML = `
         <tr>
-            <td colspan="6" class="text-center py-4">No data found</td>
+            <td colspan="9" class="text-center py-4">No data found</td>
         </tr>`;
         return;
     }
@@ -186,23 +196,25 @@ function renderTable(data) {
     data.forEach(item => {
 
         tableBody.innerHTML += `
-        <tr>
+        <tr class="border-b hover:bg-gray-50">
 
-            <td class="py-2 font-semibold">${item.companyName || ""}</td>
+            <td class="py-3 font-semibold">${item.companyName || ""}</td>
 
-            <td class="py-2">
+            <td class="py-3">
                 ${item.contactPerson || ""}
                 <div class="text-xs text-gray-500">${item.phone || ""}</div>
             </td>
 
-            <td class="py-2">
+            <td class="py-3">
                 ${item.requirementType || ""} (${item.numberOfStaff || 0})
             </td>
 
-            <td class="py-2">${item.timeline || ""}</td>
+            <td class="py-3">${item.timeline || ""}</td>
 
-            <td class="py-2">
-                <select onchange="updateStatus('${item._id}', this.value)" class="border rounded p-1">
+            <!-- STATUS -->
+            <td class="py-3">
+                <select onchange="updateStatus('${item._id}', this.value)"
+                    class="border rounded p-1 ${getStatusColor(item.status)}">
                     <option ${item.status==="New"?"selected":""}>New</option>
                     <option ${item.status==="Contacted"?"selected":""}>Contacted</option>
                     <option ${item.status==="In Progress"?"selected":""}>In Progress</option>
@@ -210,8 +222,39 @@ function renderTable(data) {
                 </select>
             </td>
 
-            <td class="py-2 text-right">
-                <button onclick="deleteRow('${item._id}')" class="text-red-500">Delete</button>
+            <!-- PRIORITY -->
+            <td class="py-3">
+                <select onchange="updatePriority('${item._id}', this.value)"
+                    class="border rounded p-1 ${getPriorityColor(item.priority)}">
+                    <option ${item.priority==="Hot"?"selected":""}>Hot 🔥</option>
+                    <option ${item.priority==="Warm"?"selected":""}>Warm</option>
+                    <option ${item.priority==="Cold"?"selected":""}>Cold</option>
+                </select>
+            </td>
+
+            <!-- ASSIGN -->
+            <td class="py-3">
+                <select onchange="assignRecruiter('${item._id}', this.value)" class="border rounded p-1">
+                    <option ${item.assignedTo==="Unassigned"?"selected":""}>Unassigned</option>
+                    <option ${item.assignedTo==="Rahul"?"selected":""}>Rahul</option>
+                    <option ${item.assignedTo==="Ankit"?"selected":""}>Ankit</option>
+                </select>
+            </td>
+
+            <!-- FOLLOW-UP -->
+            <td class="py-3">
+                <input type="date"
+                    value="${item.followUpDate ? item.followUpDate.split('T')[0] : ''}"
+                    onchange="updateFollowUp('${item._id}', this.value)"
+                    class="border p-1 rounded"/>
+            </td>
+
+            <!-- DELETE -->
+            <td class="py-3 text-right">
+                <button onclick="deleteRow('${item._id}')"
+                    class="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200">
+                    Delete
+                </button>
             </td>
 
         </tr>`;
@@ -265,14 +308,53 @@ async function updateStatus(id, status) {
 }
 
 // =======================
+// PRIORITY
+// =======================
+async function updatePriority(id, priority) {
+
+    await fetch(`${API_BASE}/client-enquiries/${id}/priority`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priority })
+    });
+
+}
+
+// =======================
+// ASSIGN
+// =======================
+async function assignRecruiter(id, assignedTo) {
+
+    await fetch(`${API_BASE}/client-enquiries/${id}/assign`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ assignedTo })
+    });
+
+}
+
+// =======================
+// FOLLOW-UP
+// =======================
+async function updateFollowUp(id, followUpDate) {
+
+    await fetch(`${API_BASE}/client-enquiries/${id}/followup`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ followUpDate })
+    });
+
+}
+
+// =======================
 // EXPORT
 // =======================
 function exportCSV() {
 
-    let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline,Status\n";
+    let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline,Status,Priority,Assigned\n";
 
     enquiriesData.forEach(item => {
-        csv += `${item.companyName},${item.contactPerson},${item.phone},${item.requirementType},${item.numberOfStaff},${item.location},${item.timeline},${item.status}\n`;
+        csv += `${item.companyName},${item.contactPerson},${item.phone},${item.requirementType},${item.numberOfStaff},${item.location},${item.timeline},${item.status},${item.priority},${item.assignedTo}\n`;
     });
 
     const blob = new Blob([csv], { type: "text/csv" });
@@ -292,9 +374,7 @@ function logout() {
     window.location.href = "index.html";
 }
 
-// =======================
 // INIT
-// =======================
 loadEnquiries();
 
 </script>
