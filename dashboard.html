@@ -18,26 +18,41 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+/* Custom styling for a sleeker scrollbar inside the detailed layout popup */
+.custom-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
 </style>
 </head>
 
 <body class="flex">
 
-<div class="w-60 bg-gradient-to-b from-blue-700 to-indigo-700 text-white h-screen p-5">
+<div class="w-60 bg-gradient-to-b from-blue-700 to-indigo-700 text-white h-screen p-5 flex-shrink-0">
     <h2 class="text-2xl font-bold mb-8">Staffnexa</h2>
     <ul class="space-y-4">
-        <li class="bg-white text-blue-700 px-3 py-2 rounded font-semibold">Dashboard</li>
-        <li class="opacity-80">Leads</li>
-        <li class="opacity-80">Candidates</li>
-        <li class="opacity-80">Settings</li>
+        <li class="bg-white text-blue-700 px-3 py-2 rounded font-semibold shadow-sm cursor-pointer">Dashboard</li>
+        <li class="opacity-80 hover:opacity-100 transition custom-pointer px-3 py-1 block">Leads</li>
+        <li class="opacity-80 hover:opacity-100 transition custom-pointer px-3 py-1 block">Candidates</li>
+        <li class="opacity-80 hover:opacity-100 transition custom-pointer px-3 py-1 block">Settings</li>
     </ul>
 </div>
 
 <div class="flex-1 h-screen overflow-y-auto">
 
-    <div class="bg-white px-6 py-4 flex justify-between items-center shadow-sm">
+    <div class="bg-white px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-10">
         <h1 class="text-lg font-semibold text-gray-700">Client Enquiries CRM</h1>
-        <button onclick="logout()" class="bg-red-500 text-white px-4 py-1 rounded">Logout</button>
+        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded transition">Logout</button>
     </div>
 
     <div class="p-6">
@@ -63,26 +78,26 @@ body {
 
         <div class="card mb-6 flex gap-4 items-center">
             <input id="companySearch" onkeyup="filterTable()"
-                placeholder="Search company or contact..."
-                class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400"/>
+                placeholder="Search company, contact, email or phone..."
+                class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400 outline-none transition"/>
 
-            <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded">
+            <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded bg-white outline-none">
                 <option value="">All Roles</option>
                 <option>Pantry</option>
                 <option>Housekeeping</option>
                 <option>Security</option>
             </select>
 
-            <button onclick="exportCSV()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <button onclick="exportCSV()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition font-medium flex-shrink-0">
                 Export
             </button>
         </div>
 
         <div class="card overflow-x-auto">
             <table class="min-w-full">
-                <thead class="text-gray-600 text-sm border-b">
+                <thead class="text-gray-600 text-sm border-b bg-gray-50">
                     <tr>
-                        <th class="py-3 text-left">Company</th>
+                        <th class="py-3 px-2 text-left">Company</th>
                         <th class="py-3 text-left">Contact</th>
                         <th class="py-3 text-left">Requirement</th>
                         <th class="py-3 text-left">Timeline</th>
@@ -90,7 +105,7 @@ body {
                         <th class="py-3 text-left">Priority</th>
                         <th class="py-3 text-left">Assigned</th>
                         <th class="py-3 text-left">Follow-up</th>
-                        <th class="py-3 text-right">Action</th>
+                        <th class="py-3 text-right pr-2">Action</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -100,19 +115,24 @@ body {
     </div>
 </div>
 
-<div id="detailsModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 p-4">
-    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
-            <h3 class="text-xl font-bold text-gray-800" id="modalCompanyName">Company Details</h3>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl font-semibold">&times;</button>
+<div id="detailsModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex justify-center items-center z-50 p-4 transition-all duration-200">
+    <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden transform scale-100">
+        
+        <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
+            <div>
+                <h3 class="text-xl font-bold text-gray-800" id="modalCompanyName">Company Details</h3>
+                <p class="text-xs text-gray-500 mt-0.5" id="modalTimestampField">Enquiry Submission Blueprint</p>
+            </div>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-3xl font-normal leading-none focus:outline-none">&times;</button>
         </div>
         
-        <div class="p-6 space-y-6" id="modalContent">
+        <div class="p-6 overflow-y-auto space-y-6 custom-scroll flex-1 bg-white" id="modalContent">
             </div>
 
-        <div class="px-6 py-4 border-t flex justify-end bg-gray-50 rounded-b-xl">
-            <button onclick="closeModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-lg font-medium transition shadow-sm">
-                Close
+        <div class="px-6 py-4 border-t flex justify-between items-center bg-gray-50">
+            <div id="modalInternalRoutingId" class="text-xs text-gray-400 font-mono">ID: --</div>
+            <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm transition">
+                Done
             </button>
         </div>
     </div>
@@ -124,7 +144,7 @@ const API_BASE = "https://staffnexa-backend.onrender.com";
 let enquiriesData = [];
 
 // =======================
-// LOAD DATA
+// DATA REFRESH FUNCTION
 // =======================
 async function loadEnquiries() {
     try {
@@ -142,7 +162,7 @@ async function loadEnquiries() {
 }
 
 // =======================
-// FOLLOW-UP COLOR
+// COMPUTE DATE FILL STYLES
 // =======================
 function getFollowUpColor(date) {
     if (!date) return "";
@@ -150,14 +170,14 @@ function getFollowUpColor(date) {
     const today = new Date().toISOString().split("T")[0];
     const d = new Date(date).toISOString().split("T")[0];
 
-    if (d < today) return "bg-red-50";      // overdue light fill
-    if (d === today) return "bg-yellow-50"; // today light fill
+    if (d < today) return "bg-red-50";      // Red fill alert for past overdue items
+    if (d === today) return "bg-yellow-50"; // Yellow alert fill tracking context for today
 
     return "";
 }
 
 // =======================
-// STATS
+// ANALYTICS HEADERS COMPILER
 // =======================
 function updateStats(data) {
     const today = new Date().toISOString().split("T")[0];
@@ -178,23 +198,23 @@ function updateStats(data) {
 }
 
 // =======================
-// CONFIG COLOR HELPERS
+// SELECTION CHIPS COLOR STYLES
 // =======================
 function getStatusColor(status) {
-    if (status === "New") return "bg-blue-100 text-blue-700";
-    if (status === "Contacted") return "bg-yellow-100 text-yellow-700";
-    if (status === "Closed") return "bg-green-100 text-green-700";
-    return "bg-gray-100 text-gray-700";
+    if (status === "New") return "bg-blue-100 text-blue-700 border-blue-200";
+    if (status === "Contacted") return "bg-yellow-100 text-yellow-700 border-yellow-200";
+    if (status === "Closed") return "bg-green-100 text-green-700 border-green-200";
+    return "bg-gray-100 text-gray-700 border-gray-200";
 }
 
 function getPriorityColor(priority) {
-    if (priority === "Hot") return "bg-red-100 text-red-600";
-    if (priority === "Warm") return "bg-yellow-100 text-yellow-700";
-    return "bg-gray-100 text-gray-700";
+    if (priority === "Hot") return "bg-red-100 text-red-700 border-red-200";
+    if (priority === "Warm") return "bg-yellow-100 text-yellow-700 border-yellow-200";
+    return "bg-gray-100 text-gray-600 border-gray-200";
 }
 
 // =======================
-// TABLE RENDER
+// TABLE RENDER CORE ENGINE
 // =======================
 function renderTable(data) {
     const tableBody = document.getElementById("tableBody");
@@ -203,7 +223,7 @@ function renderTable(data) {
     if (!data.length) {
         tableBody.innerHTML = `
         <tr>
-            <td colspan="9" class="text-center py-4 text-gray-500">No data found</td>
+            <td colspan="9" class="text-center py-8 text-gray-400 font-medium">No data matching filters located in database storage.</td>
         </tr>`;
         return;
     }
@@ -211,26 +231,31 @@ function renderTable(data) {
     data.forEach(item => {
         const rowColor = getFollowUpColor(item.followUpDate);
 
+        // Safe Fallback Resolution for mapping variation of fields 
+        const displayRequirement = item.requirementType || item.role || item.servicesNeeded || "Not Selected";
+        const displayCompany = item.companyName || item.organization || "No Title Entry";
+
         tableBody.innerHTML += `
-        <tr class="border-b hover:bg-gray-50 transition-colors ${rowColor}">
-            <td class="py-3 font-semibold text-blue-600 hover:underline cursor-pointer" onclick="showDetails('${item._id}')">
-                ${item.companyName || "Unnamed Company"}
+        <tr class="border-b hover:bg-gray-50/80 transition-colors ${rowColor}">
+            <td class="py-3.5 px-2 font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer transition max-w-[180px] truncate" onclick="showDetails('${item._id}')" title="Click to unfold full form details">
+                ${displayCompany}
             </td>
 
-            <td class="py-3">
-                ${item.contactPerson || ""}
-                <div class="text-xs text-gray-500">${item.phone || ""}</div>
+            <td class="py-3 text-sm text-gray-800">
+                <div class="font-medium">${item.contactPerson || item.fullName || item.name || "N/A"}</div>
+                <div class="text-xs text-gray-500 mt-0.5">${item.phone || "No Phone"}</div>
             </td>
 
-            <td class="py-3">
-                ${item.requirementType || ""} (${item.numberOfStaff || 0})
+            <td class="py-3 text-sm text-gray-700">
+                <span class="font-medium">${displayRequirement}</span> 
+                <span class="text-xs bg-gray-100 border text-gray-600 rounded px-1.5 ml-1 font-bold">x${item.numberOfStaff || item.staffCount || 0}</span>
             </td>
 
-            <td class="py-3">${item.timeline || ""}</td>
+            <td class="py-3 text-sm text-gray-600">${item.timeline || item.expectedStartDate || "Flexible"}</td>
 
             <td class="py-3">
                 <select onchange="updateStatus('${item._id}', this.value)"
-                    class="border rounded p-1 ${getStatusColor(item.status)} font-medium">
+                    class="border rounded p-1 text-xs font-semibold focus:ring-2 focus:ring-blue-300 outline-none transition cursor-pointer ${getStatusColor(item.status)}">
                     <option ${item.status==="New"?"selected":""}>New</option>
                     <option ${item.status==="Contacted"?"selected":""}>Contacted</option>
                     <option ${item.status==="In Progress"?"selected":""}>In Progress</option>
@@ -240,7 +265,7 @@ function renderTable(data) {
 
             <td class="py-3">
                 <select onchange="updatePriority('${item._id}', this.value)"
-                    class="border rounded p-1 ${getPriorityColor(item.priority)} font-medium">
+                    class="border rounded p-1 text-xs font-semibold focus:ring-2 focus:ring-blue-300 outline-none transition cursor-pointer ${getPriorityColor(item.priority)}">
                     <option ${item.priority==="Hot"?"selected":""}>Hot 🔥</option>
                     <option ${item.priority==="Warm"?"selected":""}>Warm</option>
                     <option ${item.priority==="Cold"?"selected":""}>Cold</option>
@@ -248,7 +273,7 @@ function renderTable(data) {
             </td>
 
             <td class="py-3">
-                <select onchange="assignRecruiter('${item._id}', this.value)" class="border rounded p-1 bg-white">
+                <select onchange="assignRecruiter('${item._id}', this.value)" class="border rounded p-1 text-xs font-medium text-gray-700 bg-white shadow-sm focus:ring-2 focus:ring-blue-300 outline-none cursor-pointer">
                     <option ${item.assignedTo==="Unassigned"?"selected":""}>Unassigned</option>
                     <option ${item.assignedTo==="Rahul"?"selected":""}>Rahul</option>
                     <option ${item.assignedTo==="Ankit"?"selected":""}>Ankit</option>
@@ -259,12 +284,12 @@ function renderTable(data) {
                 <input type="date"
                     value="${item.followUpDate ? item.followUpDate.split('T')[0] : ''}"
                     onchange="updateFollowUp('${item._id}', this.value)"
-                    class="border p-1 rounded bg-white text-sm"/>
+                    class="border p-1 rounded bg-white text-xs text-gray-700 focus:ring-2 focus:ring-blue-300 outline-none cursor-pointer shadow-sm"/>
             </td>
 
-            <td class="py-3 text-right">
+            <td class="py-3 text-right pr-2">
                 <button onclick="deleteRow('${item._id}')"
-                    class="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200 transition">
+                    class="bg-red-50 border border-red-200 text-red-600 px-2.5 py-1 text-xs rounded font-medium hover:bg-red-100 transition shadow-sm">
                     Delete
                 </button>
             </td>
@@ -272,80 +297,144 @@ function renderTable(data) {
     });
 }
 
-// =======================
-// MODAL LOGIC (POPUP DETAILED VIEW)
-// =======================
+// ===============================================
+// MODAL CONTROLLER (COMPREHENSIVE ALL-FIELDS POPUP)
+// ===============================================
 function showDetails(id) {
     const item = enquiriesData.find(d => d._id === id);
     if (!item) return;
 
-    document.getElementById("modalCompanyName").innerText = item.companyName || "Company Details";
+    // Set Header Data
+    document.getElementById("modalCompanyName").innerText = item.companyName || item.organization || "Company Profile Metadata";
+    document.getElementById("modalInternalRoutingId").innerText = `System ID Reference: ${item._id}`;
     
-    // Construct all the key-value structures from the form model dynamically
+    // Format timestamp details if present
+    if (item.createdAt) {
+        const submissionDate = new Date(item.createdAt).toLocaleString();
+        document.getElementById("modalTimestampField").innerText = `Form Received On: ${submissionDate}`;
+    } else {
+        document.getElementById("modalTimestampField").innerText = `Active Account Registration Record Profile`;
+    }
+
     const modalContent = document.getElementById("modalContent");
+    
+    // Resolve any varied/nested schemas used for array types or checked parameters
+    let computedServicesHtml = "";
+    if (item.additionalServices || item.selectedRoles) {
+        const list = item.additionalServices || item.selectedRoles || [];
+        if (Array.isArray(list) && list.length > 0) {
+            computedServicesHtml = list.map(s => `<span class="bg-indigo-50 border border-indigo-200 text-indigo-700 font-medium text-xs px-2.5 py-1 rounded-full">${s}</span>`).join(" ");
+        } else if (typeof list === 'string') {
+            computedServicesHtml = `<span class="bg-indigo-50 border border-indigo-200 text-indigo-700 font-medium text-xs px-2.5 py-1 rounded-full">${list}</span>`;
+        }
+    }
+
+    // Build exhaustive dashboard mapping layout 
     modalContent.innerHTML = `
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Contact Person</span>
-                <span class="text-gray-800 font-medium text-base">${item.contactPerson || 'N/A'}</span>
-            </div>
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Phone Number</span>
-                <span class="text-gray-800 font-medium text-base">${item.phone || 'N/A'}</span>
-            </div>
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Email Address</span>
-                <span class="text-gray-800 font-medium text-base">${item.email || 'N/A'}</span>
-            </div>
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Location / Address</span>
-                <span class="text-gray-800 font-medium text-base">${item.location || 'N/A'}</span>
-            </div>
-        </div>
-
-        <div class="border-t pt-4 grid grid-cols-2 gap-4">
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Requirement Profile</span>
-                <span class="text-gray-800 font-medium text-base">${item.requirementType || 'N/A'}</span>
-            </div>
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Staff Count Requested</span>
-                <span class="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded font-bold text-sm">${item.numberOfStaff || 0} Pax</span>
-            </div>
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Expected Timeline</span>
-                <span class="text-gray-800 font-medium text-base">${item.timeline || 'N/A'}</span>
-            </div>
-             <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Follow Up Strategy Date</span>
-                <span class="text-gray-800 font-medium text-base">${item.followUpDate ? item.followUpDate.split('T')[0] : 'Not Scheduled'}</span>
+        <div class="space-y-3">
+            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">1. Primary Corporate Identity & Contact Details</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Company / Organization Legal Entity Name</span>
+                    <span class="text-gray-800 font-semibold">${item.companyName || item.organization || 'N/A'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Contact Person Full Name</span>
+                    <span class="text-gray-800 font-semibold">${item.contactPerson || item.fullName || item.name || 'N/A'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Designation / Corporate Role</span>
+                    <span class="text-gray-700 text-sm font-medium">${item.designation || item.jobTitle || 'N/A'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Authorized Contact Phone Number</span>
+                    <span class="text-blue-600 font-mono font-medium">${item.phone || 'N/A'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Official Corporate Email Address</span>
+                    <span class="text-blue-600 underline font-medium text-sm break-all">${item.email || 'N/A'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Industry Vertical / Sector Type</span>
+                    <span class="text-gray-700 text-sm font-medium">${item.industryType || item.industry || 'N/A'}</span>
+                </div>
+                <div class="md:col-span-2">
+                    <span class="block text-xs text-gray-400 font-medium">Operational Location / Site Physical Address</span>
+                    <span class="text-gray-700 text-sm font-medium">${item.location || item.address || item.city || 'N/A'}</span>
+                </div>
             </div>
         </div>
 
-        <div class="border-t pt-4 grid grid-cols-3 gap-2">
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Lifecycle Status</span>
-                <span class="inline-block px-3 py-1 rounded text-xs font-bold uppercase mt-1 ${getStatusColor(item.status)}">${item.status || 'New'}</span>
-            </div>
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Priority Tier</span>
-                <span class="inline-block px-3 py-1 rounded text-xs font-bold uppercase mt-1 ${getPriorityColor(item.priority)}">${item.priority || 'Cold'}</span>
-            </div>
-            <div>
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider">Account Manager</span>
-                <span class="inline-block mt-1 text-gray-700 font-semibold">${item.assignedTo || 'Unassigned'}</span>
+        <div class="space-y-3">
+            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">2. Staffing Request & Target Specifications</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Primary Requirement Profile / Role Requested</span>
+                    <span class="bg-blue-50 text-blue-800 font-bold px-2 py-0.5 rounded text-sm mt-0.5 inline-block border border-blue-200">
+                        ${item.requirementType || item.role || item.servicesNeeded || 'N/A'}
+                    </span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Headcount Volume Required (Staff Count)</span>
+                    <span class="text-gray-800 font-bold text-base block mt-0.5">${item.numberOfStaff || item.staffCount || 0} Pax</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Deployment Timeline Constraint</span>
+                    <span class="text-gray-700 text-sm font-semibold">${item.timeline || item.expectedStartDate || 'N/A'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Proposed Budget Bracket / Salary Structure Offer</span>
+                    <span class="text-gray-700 text-sm font-medium font-mono">${item.budget || item.salaryOffered || item.budgetRange || 'Negotiable / Undisclosed'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Shift Arrangements Metric</span>
+                    <span class="text-gray-700 text-sm font-medium">${item.shiftType || item.shiftTimings || 'Standard Operations'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Job Mode Context</span>
+                    <span class="text-gray-700 text-sm font-medium">${item.jobType || item.employmentType || 'Full-Time Contract'}</span>
+                </div>
+                ${computedServicesHtml ? `
+                <div class="md:col-span-2">
+                    <span class="block text-xs text-gray-400 font-medium mb-1.5">Ancillary Services / Cross-Functional Selection Tags</span>
+                    <div class="flex flex-wrap gap-2">${computedServicesHtml}</div>
+                </div>` : ''}
             </div>
         </div>
 
-        <div class="border-t pt-4">
-            <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Additional Notes / Custom Field Submissions</span>
-            <div class="bg-gray-50 border p-3 rounded-lg text-gray-700 text-sm italic whitespace-pre-line">
-                ${item.notes || 'No extra remarks or structural descriptions submitted by the client.'}
+        <div class="space-y-3">
+            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">3. Administrative Alignment & Lifecycle Status</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Lifecycle Status Tracker</span>
+                    <span class="inline-block border text-xs font-bold px-2.5 py-0.5 rounded mt-1 uppercase ${getStatusColor(item.status)}">${item.status || 'New'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Priority Ranking Metric</span>
+                    <span class="inline-block border text-xs font-bold px-2.5 py-0.5 rounded mt-1 uppercase ${getPriorityColor(item.priority)}">${item.priority || 'Cold'}</span>
+                </div>
+                <div>
+                    <span class="block text-xs text-gray-400 font-medium">Internal Assigned Account Manager</span>
+                    <span class="text-gray-800 font-semibold block mt-1 text-sm"><span class="text-gray-400">👤</span> ${item.assignedTo || 'Unassigned Team'}</span>
+                </div>
+                <div class="md:col-span-3 border-t pt-3 mt-1">
+                    <span class="block text-xs text-gray-400 font-medium">Next Dedicated Account Follow-Up Action Date</span>
+                    <span class="text-gray-700 text-sm font-semibold block mt-0.5">
+                        📅 ${item.followUpDate ? new Date(item.followUpDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'No Targeted Review Scheduled'}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">4. Extended Form Message / Special Requirements & Notes</h4>
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl text-gray-700 text-sm italic whitespace-pre-line leading-relaxed shadow-inner">
+                ${item.notes || item.message || item.comments || item.requirementDetails || 'No additional custom message details or tailored operational criteria remarks were supplied in the form input field by the client contact.'}
             </div>
         </div>
     `;
 
-    // Unhide modal
+    // Display overlay wrapper
     document.getElementById("detailsModal").classList.remove("hidden");
 }
 
@@ -353,7 +442,7 @@ function closeModal() {
     document.getElementById("detailsModal").classList.add("hidden");
 }
 
-// Close Modal instantly when clicking outside the window element canvas layout
+// Global interface closing listener when target canvas interaction occurs outside layout windows
 window.onclick = function(event) {
     const modal = document.getElementById("detailsModal");
     if (event.target === modal) {
@@ -362,38 +451,43 @@ window.onclick = function(event) {
 }
 
 // =======================
-// FILTER
+// TABLE STREAM FILTERS
 // =======================
 function filterTable() {
     const search = document.getElementById("companySearch").value.toLowerCase();
     const role = document.getElementById("roleFilter").value.toLowerCase();
 
     const filtered = enquiriesData.filter(item => {
-        const compName = (item.companyName || "").toLowerCase();
-        const contactP = (item.contactPerson || "").toLowerCase();
-        const reqType = (item.requirementType || "").toLowerCase();
+        const comp = (item.companyName || item.organization || "").toLowerCase();
+        const contact = (item.contactPerson || item.fullName || item.name || "").toLowerCase();
+        const mail = (item.email || "").toLowerCase();
+        const phone = (item.phone || "").toLowerCase();
+        const requirement = (item.requirementType || item.role || item.servicesNeeded || "").toLowerCase();
 
-        return (compName.includes(search) || contactP.includes(search)) &&
-               (role === "" || reqType.includes(role));
+        const matchSearch = comp.includes(search) || contact.includes(search) || mail.includes(search) || phone.includes(search);
+        const matchRole = (role === "" || requirement.includes(role));
+
+        return matchSearch && matchRole;
     });
 
     renderTable(filtered);
 }
 
 // =======================
-// DELETE
+// REMOVE ROW DATA
 // =======================
 async function deleteRow(id) {
-    if (!confirm("Delete this enquiry?")) return;
+    if (!confirm("Are you absolutely sure you want to drop this client enquiry lead from CRM tracking records?")) return;
 
     await fetch(`${API_BASE}/client-enquiries/${id}`, {
         method: "DELETE"
     });
+
     loadEnquiries();
 }
 
 // =======================
-// STATUS UPDATE
+// MUTATION ACTION WRAPPERS
 // =======================
 async function updateStatus(id, status) {
     await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
@@ -401,80 +495,86 @@ async function updateStatus(id, status) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status })
     });
+    
+    // Memory Cache Update to mirror transformations inside subsequent popups instantly
+    const index = enquiriesData.findIndex(d => d._id === id);
+    if(index !== -1) enquiriesData[index].status = status;
+    
     loadEnquiries();
 }
 
-// =======================
-// PRIORITY UPDATE
-// =======================
 async function updatePriority(id, priority) {
     await fetch(`${API_BASE}/client-enquiries/${id}/priority`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ priority })
     });
-    // Find item locally and update memory so subsequent modal views reflect mutations instantly
-    const index = enquiriesData.findIndex(item => item._id === id);
+
+    const index = enquiriesData.findIndex(d => d._id === id);
     if(index !== -1) enquiriesData[index].priority = priority;
 }
 
-// =======================
-// ASSIGN RECRUITER
-// =======================
 async function assignRecruiter(id, assignedTo) {
     await fetch(`${API_BASE}/client-enquiries/${id}/assign`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ assignedTo })
     });
-    const index = enquiriesData.findIndex(item => item._id === id);
+
+    const index = enquiriesData.findIndex(d => d._id === id);
     if(index !== -1) enquiriesData[index].assignedTo = assignedTo;
 }
 
-// =======================
-// FOLLOW-UP UPDATE
-// =======================
 async function updateFollowUp(id, followUpDate) {
     await fetch(`${API_BASE}/client-enquiries/${id}/followup`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ followUpDate })
     });
-    const index = enquiriesData.findIndex(item => item._id === id);
+
+    const index = enquiriesData.findIndex(d => d._id === id);
     if(index !== -1) enquiriesData[index].followUpDate = followUpDate;
+    
     updateStats(enquiriesData);
 }
 
 // =======================
-// EXPORT CSV
+// DATA STREAM EXPORT ENGINE
 // =======================
 function exportCSV() {
-    let csv = "Company,Contact,Phone,Role,Staff,Location,Timeline,Status,Priority,Assigned\n";
+    let csv = "Company,Contact,Phone,Email,Role,StaffCount,Location,Timeline,Status,Priority,Assigned\n";
 
     enquiriesData.forEach(item => {
-        csv += `"${item.companyName || ''}","${item.contactPerson || ''}","${item.phone || ''}","${item.requirementType || ''}","${item.numberOfStaff || 0}","${item.location || ''}","${item.timeline || ''}","${item.status || ''}","${item.priority || ''}","${item.assignedTo || ''}"\n`;
+        const cName = item.companyName || item.organization || '';
+        const pName = item.contactPerson || item.fullName || item.name || '';
+        const req = item.requirementType || item.role || item.servicesNeeded || '';
+        const qty = item.numberOfStaff || item.staffCount || 0;
+        const loc = item.location || item.address || '';
+
+        csv += `"${cName}","${pName}","${item.phone || ''}","${item.email || ''}","${req}","${qty}","${loc}","${item.timeline || ''}","${item.status || ''}","${item.priority || ''}","${item.assignedTo || ''}"\n`;
     });
 
-    const blob = new Blob([csv], { type: "text/csv" });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "client-enquiries.csv";
+    a.download = `staffnexa-leads-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
 }
 
 // =======================
-// LOGOUT
+// TERMINATE DEPLOYMENT SESSION
 // =======================
 function logout() {
     localStorage.removeItem("clientAuth");
     window.location.href = "index.html";
 }
 
-// INITIALIZE
+// INITIAL START INVOCATION
 loadEnquiries();
 
 </script>
+
 </body>
 </html>
