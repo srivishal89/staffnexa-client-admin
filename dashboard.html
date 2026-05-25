@@ -18,7 +18,6 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
-/* Custom styling for a sleeker scrollbar inside the detailed layout popup */
 .custom-scroll::-webkit-scrollbar {
     width: 6px;
 }
@@ -36,102 +35,119 @@ body {
 </style>
 </head>
 
-<body class="flex">
+<body class="flex flex-col lg:flex-row min-h-screen">
 
-<div class="w-60 bg-gradient-to-b from-blue-700 to-indigo-700 text-white h-screen p-5 flex-shrink-0">
-    <h2 class="text-2xl font-bold mb-8">Staffnexa</h2>
+<div class="lg:hidden bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-4 flex justify-between items-center sticky top-0 z-30 shadow-md">
+    <h2 class="text-xl font-bold">Staffnexa</h2>
+    <button onclick="toggleMobileMenu()" class="text-white focus:outline-none focus:ring-2 focus:ring-white p-1 rounded">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    </button>
+</div>
+
+<div id="sidebarMenu" class="hidden lg:block w-full lg:w-64 bg-gradient-to-b from-blue-700 to-indigo-700 text-white p-5 flex-shrink-0 fixed lg:relative z-20 top-0 left-0 h-screen lg:h-auto">
+    <div class="flex justify-between items-center lg:block mb-8">
+        <h2 class="text-2xl font-bold">Staffnexa</h2>
+        <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-2xl">&times;</button>
+    </div>
     <ul class="space-y-4">
-        <li class="bg-white text-blue-700 px-3 py-2 rounded font-semibold shadow-sm cursor-pointer">Dashboard</li>
-        <li class="opacity-80 hover:opacity-100 transition custom-pointer px-3 py-1 block">Leads</li>
-        <li class="opacity-80 hover:opacity-100 transition custom-pointer px-3 py-1 block">Candidates</li>
-        <li class="opacity-80 hover:opacity-100 transition custom-pointer px-3 py-1 block">Settings</li>
+        <li class="bg-white text-blue-700 px-3 py-2 rounded font-semibold shadow-sm cursor-pointer" onclick="toggleMobileMenu()">Dashboard</li>
+        <li class="opacity-80 hover:opacity-100 transition cursor-pointer px-3 py-1 block" onclick="toggleMobileMenu()">Leads</li>
+        <li class="opacity-80 hover:opacity-100 transition cursor-pointer px-3 py-1 block" onclick="toggleMobileMenu()">Candidates</li>
+        <li class="opacity-80 hover:opacity-100 transition cursor-pointer px-3 py-1 block" onclick="toggleMobileMenu()">Settings</li>
     </ul>
 </div>
 
-<div class="flex-1 h-screen overflow-y-auto">
+<div class="flex-1 min-w-0 flex flex-col">
 
-    <div class="bg-white px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-10">
-        <h1 class="text-lg font-semibold text-gray-700">Client Enquiries CRM</h1>
-        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded transition">Logout</button>
+    <div class="bg-white px-4 lg:px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 lg:z-10 z-0">
+        <h1 class="text-base lg:text-lg font-semibold text-gray-700">Client Enquiries CRM</h1>
+        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 text-sm lg:text-base rounded transition">Logout</button>
     </div>
 
-    <div class="p-6">
+    <div class="p-4 lg:p-6 space-y-6">
 
-        <div class="grid grid-cols-4 gap-5 mb-6">
-            <div class="card border-l-4 border-blue-500">
-                <div class="text-gray-500 text-sm">Total Leads</div>
-                <div id="totalLeads" class="text-2xl font-bold text-gray-800">0</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-5">
+            <div class="card border-l-4 border-blue-500 p-3 lg:p-4">
+                <div class="text-gray-500 text-xs lg:text-sm truncate">Total Leads</div>
+                <div id="totalLeads" class="text-xl lg:text-2xl font-bold text-gray-800 mt-1">0</div>
             </div>
-            <div class="card border-l-4 border-blue-600">
-                <div class="text-gray-500 text-sm">New</div>
-                <div id="newLeads" class="text-2xl font-bold text-blue-600">0</div>
+            <div class="card border-l-4 border-blue-600 p-3 lg:p-4">
+                <div class="text-gray-500 text-xs lg:text-sm truncate">New</div>
+                <div id="newLeads" class="text-xl lg:text-2xl font-bold text-blue-600 mt-1">0</div>
             </div>
-            <div class="card border-l-4 border-yellow-500">
-                <div class="text-gray-500 text-sm">Contacted</div>
-                <div id="contactedLeads" class="text-2xl font-bold text-yellow-500">0</div>
+            <div class="card border-l-4 border-yellow-500 p-3 lg:p-4">
+                <div class="text-gray-500 text-xs lg:text-sm truncate">Contacted</div>
+                <div id="contactedLeads" class="text-xl lg:text-2xl font-bold text-yellow-500 mt-1">0</div>
             </div>
-            <div class="card border-l-4 border-green-500">
-                <div class="text-gray-500 text-sm">Closed</div>
-                <div id="closedLeads" class="text-2xl font-bold text-green-600">0</div>
+            <div class="card border-l-4 border-green-500 p-3 lg:p-4">
+                <div class="text-gray-500 text-xs lg:text-sm truncate">Closed</div>
+                <div id="closedLeads" class="text-xl lg:text-2xl font-bold text-green-600 mt-1">0</div>
             </div>
         </div>
 
-        <div class="card mb-6 flex gap-4 items-center">
-            <input id="companySearch" onkeyup="filterTable()"
-                placeholder="Search company, contact, email or phone..."
-                class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400 outline-none transition"/>
+        <div class="card flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+            <div class="flex-1">
+                <input id="companySearch" onkeyup="filterTable()"
+                    placeholder="Search company, contact, email..."
+                    class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400 outline-none transition text-sm"/>
+            </div>
 
-            <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded bg-white outline-none">
-                <option value="">All Roles</option>
-                <option>Pantry</option>
-                <option>Housekeeping</option>
-                <option>Security</option>
-            </select>
+            <div class="flex gap-2 w-full md:w-auto">
+                <select id="roleFilter" onchange="filterTable()" class="border p-2 rounded bg-white outline-none text-sm flex-1 md:w-40">
+                    <option value="">All Roles</option>
+                    <option>Pantry</option>
+                    <option>Housekeeping</option>
+                    <option>Security</option>
+                </select>
 
-            <button onclick="exportCSV()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition font-medium flex-shrink-0">
-                Export
-            </button>
+                <button onclick="exportCSV()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition font-medium text-sm flex-shrink-0">
+                    Export
+                </button>
+            </div>
         </div>
 
-        <div class="card overflow-x-auto">
-            <table class="min-w-full">
-                <thead class="text-gray-600 text-sm border-b bg-gray-50">
-                    <tr>
-                        <th class="py-3 px-2 text-left">Company</th>
-                        <th class="py-3 text-left">Contact</th>
-                        <th class="py-3 text-left">Requirement</th>
-                        <th class="py-3 text-left">Timeline</th>
-                        <th class="py-3 text-left">Status</th>
-                        <th class="py-3 text-left">Priority</th>
-                        <th class="py-3 text-left">Assigned</th>
-                        <th class="py-3 text-left">Follow-up</th>
-                        <th class="py-3 text-right pr-2">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
+        <div class="card p-0 overflow-hidden">
+            <div class="hidden lg:block overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="text-gray-600 text-sm border-b bg-gray-50">
+                        <tr>
+                            <th class="py-3 px-3 text-left">Company</th>
+                            <th class="py-3 text-left">Contact</th>
+                            <th class="py-3 text-left">Requirement</th>
+                            <th class="py-3 text-left">Timeline</th>
+                            <th class="py-3 text-left">Status</th>
+                            <th class="py-3 text-left">Priority</th>
+                            <th class="py-3 text-left">Assigned</th>
+                            <th class="py-3 text-left">Follow-up</th>
+                            <th class="py-3 text-right pr-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodyDesktop"></tbody>
+                </table>
+            </div>
+
+            <div id="tableBodyMobile" class="block lg:hidden divide-y divide-gray-100"></div>
         </div>
 
     </div>
 </div>
 
-<div id="detailsModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex justify-center items-center z-50 p-4 transition-all duration-200">
-    <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden transform scale-100">
+<div id="detailsModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex justify-center items-end sm:items-center z-50 p-0 sm:p-4 transition-all duration-200">
+    <div class="bg-white rounded-t-xl sm:rounded-xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden transform scale-100">
         
-        <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
-            <div>
-                <h3 class="text-xl font-bold text-gray-800" id="modalCompanyName">Company Details</h3>
-                <p class="text-xs text-gray-500 mt-0.5" id="modalTimestampField">Enquiry Submission Blueprint</p>
+        <div class="px-4 py-4 sm:px-6 border-b flex justify-between items-center bg-gray-50">
+            <div class="min-w-0 flex-1 pr-2">
+                <h3 class="text-lg sm:text-xl font-bold text-gray-800 truncate" id="modalCompanyName">Company Details</h3>
+                <p class="text-xs text-gray-500 mt-0.5 truncate" id="modalTimestampField">Enquiry Submission Blueprint</p>
             </div>
             <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-3xl font-normal leading-none focus:outline-none">&times;</button>
         </div>
         
-        <div class="p-6 overflow-y-auto space-y-6 custom-scroll flex-1 bg-white" id="modalContent">
-            </div>
+        <div class="p-4 sm:p-6 overflow-y-auto space-y-6 custom-scroll flex-1 bg-white" id="modalContent"></div>
 
-        <div class="px-6 py-4 border-t flex justify-between items-center bg-gray-50">
-            <div id="modalInternalRoutingId" class="text-xs text-gray-400 font-mono">ID: --</div>
-            <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm transition">
+        <div class="px-4 py-4 sm:px-6 border-t flex flex-col sm:flex-row gap-3 justify-between items-center bg-gray-50">
+            <div id="modalInternalRoutingId" class="text-xs text-gray-400 font-mono self-start sm:self-center">ID: --</div>
+            <button onclick="closeModal()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm transition text-center">
                 Done
             </button>
         </div>
@@ -139,67 +155,42 @@ body {
 </div>
 
 <script>
-
 const API_BASE = "https://staffnexa-backend.onrender.com";
 let enquiriesData = [];
 
-// =======================
-// DATA REFRESH FUNCTION
-// =======================
+function toggleMobileMenu() {
+    const menu = document.getElementById("sidebarMenu");
+    menu.classList.toggle("hidden");
+}
+
 async function loadEnquiries() {
     try {
         const res = await fetch(`${API_BASE}/client-enquiries?time=${Date.now()}`);
         const data = await res.json();
-
         enquiriesData = Array.isArray(data) ? data : [];
-
         updateStats(enquiriesData);
         renderTable(enquiriesData);
-
     } catch (err) {
         console.error(err);
     }
 }
 
-// =======================
-// COMPUTE DATE FILL STYLES
-// =======================
 function getFollowUpColor(date) {
     if (!date) return "";
-
     const today = new Date().toISOString().split("T")[0];
     const d = new Date(date).toISOString().split("T")[0];
-
-    if (d < today) return "bg-red-50";      // Red fill alert for past overdue items
-    if (d === today) return "bg-yellow-50"; // Yellow alert fill tracking context for today
-
+    if (d < today) return "bg-red-50/60";
+    if (d === today) return "bg-yellow-50/60";
     return "";
 }
 
-// =======================
-// ANALYTICS HEADERS COMPILER
-// =======================
 function updateStats(data) {
-    const today = new Date().toISOString().split("T")[0];
-    let overdue = 0;
-    let todayCount = 0;
-
-    data.forEach(item => {
-        if (!item.followUpDate) return;
-        const d = new Date(item.followUpDate).toISOString().split("T")[0];
-        if (d < today) overdue++;
-        if (d === today) todayCount++;
-    });
-
     document.getElementById("totalLeads").innerText = data.length;
     document.getElementById("newLeads").innerText = data.filter(d => d.status === "New").length;
     document.getElementById("contactedLeads").innerText = data.filter(d => d.status === "Contacted").length;
     document.getElementById("closedLeads").innerText = data.filter(d => d.status === "Closed").length;
 }
 
-// =======================
-// SELECTION CHIPS COLOR STYLES
-// =======================
 function getStatusColor(status) {
     if (status === "New") return "bg-blue-100 text-blue-700 border-blue-200";
     if (status === "Contacted") return "bg-yellow-100 text-yellow-700 border-yellow-200";
@@ -213,112 +204,143 @@ function getPriorityColor(priority) {
     return "bg-gray-100 text-gray-600 border-gray-200";
 }
 
-// =======================
-// TABLE RENDER CORE ENGINE
-// =======================
 function renderTable(data) {
-    const tableBody = document.getElementById("tableBody");
-    tableBody.innerHTML = "";
+    const desktopBody = document.getElementById("tableBodyDesktop");
+    const mobileBody = document.getElementById("tableBodyMobile");
+    
+    desktopBody.innerHTML = "";
+    mobileBody.innerHTML = "";
 
     if (!data.length) {
-        tableBody.innerHTML = `
-        <tr>
-            <td colspan="9" class="text-center py-8 text-gray-400 font-medium">No data matching filters located in database storage.</td>
-        </tr>`;
+        const structuralNoDataHtml = `<div class="text-center py-8 text-gray-400 font-medium text-sm">No records found matching filters.</div>`;
+        desktopBody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-gray-400 font-medium">${structuralNoDataHtml}</td></tr>`;
+        mobileBody.innerHTML = structuralNoDataHtml;
         return;
     }
 
     data.forEach(item => {
         const rowColor = getFollowUpColor(item.followUpDate);
-
-        // Safe Fallback Resolution for mapping variation of fields 
         const displayRequirement = item.requirementType || item.role || item.servicesNeeded || "Not Selected";
         const displayCompany = item.companyName || item.organization || "No Title Entry";
+        const contactPerson = item.contactPerson || item.fullName || item.name || "N/A";
+        const phone = item.phone || "No Phone";
+        const timeline = item.timeline || item.expectedStartDate || "Flexible";
+        const totalStaff = item.numberOfStaff || item.staffCount || 0;
 
-        tableBody.innerHTML += `
+        // Desktop Row Insertion
+        desktopBody.innerHTML += `
         <tr class="border-b hover:bg-gray-50/80 transition-colors ${rowColor}">
-            <td class="py-3.5 px-2 font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer transition max-w-[180px] truncate" onclick="showDetails('${item._id}')" title="Click to unfold full form details">
+            <td class="py-3.5 px-3 font-semibold text-blue-600 hover:text-blue-800 hover:underline cursor-pointer max-w-[160px] truncate" onclick="showDetails('${item._id}')">
                 ${displayCompany}
             </td>
-
             <td class="py-3 text-sm text-gray-800">
-                <div class="font-medium">${item.contactPerson || item.fullName || item.name || "N/A"}</div>
-                <div class="text-xs text-gray-500 mt-0.5">${item.phone || "No Phone"}</div>
+                <div class="font-medium">${contactPerson}</div>
+                <div class="text-xs text-gray-500 mt-0.5">${phone}</div>
             </td>
-
             <td class="py-3 text-sm text-gray-700">
                 <span class="font-medium">${displayRequirement}</span> 
-                <span class="text-xs bg-gray-100 border text-gray-600 rounded px-1.5 ml-1 font-bold">x${item.numberOfStaff || item.staffCount || 0}</span>
+                <span class="text-xs bg-gray-100 border text-gray-600 rounded px-1.5 ml-1 font-bold">x${totalStaff}</span>
             </td>
-
-            <td class="py-3 text-sm text-gray-600">${item.timeline || item.expectedStartDate || "Flexible"}</td>
-
+            <td class="py-3 text-sm text-gray-600">${timeline}</td>
             <td class="py-3">
-                <select onchange="updateStatus('${item._id}', this.value)"
-                    class="border rounded p-1 text-xs font-semibold focus:ring-2 focus:ring-blue-300 outline-none transition cursor-pointer ${getStatusColor(item.status)}">
+                <select onchange="updateStatus('${item._id}', this.value)" class="border rounded p-1 text-xs font-semibold outline-none cursor-pointer ${getStatusColor(item.status)}">
                     <option ${item.status==="New"?"selected":""}>New</option>
                     <option ${item.status==="Contacted"?"selected":""}>Contacted</option>
                     <option ${item.status==="In Progress"?"selected":""}>In Progress</option>
                     <option ${item.status==="Closed"?"selected":""}>Closed</option>
                 </select>
             </td>
-
             <td class="py-3">
-                <select onchange="updatePriority('${item._id}', this.value)"
-                    class="border rounded p-1 text-xs font-semibold focus:ring-2 focus:ring-blue-300 outline-none transition cursor-pointer ${getPriorityColor(item.priority)}">
+                <select onchange="updatePriority('${item._id}', this.value)" class="border rounded p-1 text-xs font-semibold outline-none cursor-pointer ${getPriorityColor(item.priority)}">
                     <option ${item.priority==="Hot"?"selected":""}>Hot 🔥</option>
                     <option ${item.priority==="Warm"?"selected":""}>Warm</option>
                     <option ${item.priority==="Cold"?"selected":""}>Cold</option>
                 </select>
             </td>
-
             <td class="py-3">
-                <select onchange="assignRecruiter('${item._id}', this.value)" class="border rounded p-1 text-xs font-medium text-gray-700 bg-white shadow-sm focus:ring-2 focus:ring-blue-300 outline-none cursor-pointer">
+                <select onchange="assignRecruiter('${item._id}', this.value)" class="border rounded p-1 text-xs font-medium text-gray-700 bg-white shadow-sm outline-none cursor-pointer">
                     <option ${item.assignedTo==="Unassigned"?"selected":""}>Unassigned</option>
                     <option ${item.assignedTo==="Rahul"?"selected":""}>Rahul</option>
                     <option ${item.assignedTo==="Ankit"?"selected":""}>Ankit</option>
                 </select>
             </td>
-
             <td class="py-3">
-                <input type="date"
-                    value="${item.followUpDate ? item.followUpDate.split('T')[0] : ''}"
-                    onchange="updateFollowUp('${item._id}', this.value)"
-                    class="border p-1 rounded bg-white text-xs text-gray-700 focus:ring-2 focus:ring-blue-300 outline-none cursor-pointer shadow-sm"/>
+                <input type="date" value="${item.followUpDate ? item.followUpDate.split('T')[0] : ''}" onchange="updateFollowUp('${item._id}', this.value)" class="border p-1 rounded bg-white text-xs text-gray-700 outline-none cursor-pointer shadow-sm"/>
             </td>
-
-            <td class="py-3 text-right pr-2">
-                <button onclick="deleteRow('${item._id}')"
-                    class="bg-red-50 border border-red-200 text-red-600 px-2.5 py-1 text-xs rounded font-medium hover:bg-red-100 transition shadow-sm">
-                    Delete
-                </button>
+            <td class="py-3 text-right pr-3">
+                <button onclick="deleteRow('${item._id}')" class="bg-red-50 border border-red-200 text-red-600 px-2.5 py-1 text-xs rounded font-medium hover:bg-red-100 transition">Delete</button>
             </td>
         </tr>`;
+
+        // Mobile Device Adaptive Layout Cards UI Elements
+        mobileBody.innerHTML += `
+        <div class="p-4 space-y-3 ${rowColor ? rowColor : 'bg-white'}">
+            <div class="flex justify-between items-start gap-2">
+                <div class="min-w-0">
+                    <h4 class="font-bold text-blue-600 text-base underline cursor-pointer truncate" onclick="showDetails('${item._id}')">${displayCompany}</h4>
+                    <p class="text-sm font-medium text-gray-800 mt-1">${contactPerson} • <span class="text-xs text-gray-500">${phone}</span></p>
+                </div>
+                <button onclick="deleteRow('${item._id}')" class="text-xs text-red-600 bg-red-50 border border-red-100 px-2 py-1 rounded">Delete</button>
+            </div>
+
+            <div class="flex flex-wrap gap-2 text-xs items-center justify-between bg-gray-50 p-2 rounded border border-gray-100">
+                <div>
+                    <span class="text-gray-500">Req:</span> <span class="font-semibold text-gray-800">${displayRequirement} (x${totalStaff})</span>
+                </div>
+                <div>
+                    <span class="text-gray-500">Timeline:</span> <span class="font-medium text-gray-700">${timeline}</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <div>
+                    <label class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Status</label>
+                    <select onchange="updateStatus('${item._id}', this.value)" class="w-full border rounded p-1.5 text-xs font-semibold outline-none ${getStatusColor(item.status)}">
+                        <option ${item.status==="New"?"selected":""}>New</option>
+                        <option ${item.status==="Contacted"?"selected":""}>Contacted</option>
+                        <option ${item.status==="In Progress"?"selected":""}>In Progress</option>
+                        <option ${item.status==="Closed"?"selected":""}>Closed</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Priority</label>
+                    <select onchange="updatePriority('${item._id}', this.value)" class="w-full border rounded p-1.5 text-xs font-semibold outline-none ${getPriorityColor(item.priority)}">
+                        <option ${item.priority==="Hot"?"selected":""}>Hot 🔥</option>
+                        <option ${item.priority==="Warm"?"selected":""}>Warm</option>
+                        <option ${item.priority==="Cold"?"selected":""}>Cold</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Assignee</label>
+                    <select onchange="assignRecruiter('${item._id}', this.value)" class="w-full border rounded p-1.5 text-xs font-medium text-gray-700 bg-white border-gray-200 outline-none">
+                        <option ${item.assignedTo==="Unassigned"?"selected":""}>Unassigned</option>
+                        <option ${item.assignedTo==="Rahul"?"selected":""}>Rahul</option>
+                        <option ${item.assignedTo==="Ankit"?"selected":""}>Ankit</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Follow Up Date</label>
+                    <input type="date" value="${item.followUpDate ? item.followUpDate.split('T')[0] : ''}" onchange="updateFollowUp('${item._id}', this.value)" class="w-full border p-1.5 rounded bg-white border-gray-200 text-xs text-gray-700 outline-none"/>
+                </div>
+            </div>
+        </div>`;
     });
 }
 
-// ===============================================
-// MODAL CONTROLLER (COMPREHENSIVE ALL-FIELDS POPUP)
-// ===============================================
 function showDetails(id) {
     const item = enquiriesData.find(d => d._id === id);
     if (!item) return;
 
-    // Set Header Data
     document.getElementById("modalCompanyName").innerText = item.companyName || item.organization || "Company Profile Metadata";
     document.getElementById("modalInternalRoutingId").innerText = `System ID Reference: ${item._id}`;
     
-    // Format timestamp details if present
     if (item.createdAt) {
-        const submissionDate = new Date(item.createdAt).toLocaleString();
-        document.getElementById("modalTimestampField").innerText = `Form Received On: ${submissionDate}`;
+        document.getElementById("modalTimestampField").innerText = `Form Received On: ${new Date(item.createdAt).toLocaleString()}`;
     } else {
         document.getElementById("modalTimestampField").innerText = `Active Account Registration Record Profile`;
     }
 
     const modalContent = document.getElementById("modalContent");
-    
-    // Resolve any varied/nested schemas used for array types or checked parameters
     let computedServicesHtml = "";
     if (item.additionalServices || item.selectedRoles) {
         const list = item.additionalServices || item.selectedRoles || [];
@@ -329,112 +351,70 @@ function showDetails(id) {
         }
     }
 
-    // Build exhaustive dashboard mapping layout 
     modalContent.innerHTML = `
         <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">1. Primary Corporate Identity & Contact Details</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">1. Identity & Contacts</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100 text-sm">
                 <div>
-                    <span class="block text-xs text-gray-400 font-medium">Company / Organization Legal Entity Name</span>
+                    <span class="block text-xs text-gray-400">Legal Entity Name</span>
                     <span class="text-gray-800 font-semibold">${item.companyName || item.organization || 'N/A'}</span>
                 </div>
                 <div>
-                    <span class="block text-xs text-gray-400 font-medium">Contact Person Full Name</span>
+                    <span class="block text-xs text-gray-400">Contact Person</span>
                     <span class="text-gray-800 font-semibold">${item.contactPerson || item.fullName || item.name || 'N/A'}</span>
                 </div>
                 <div>
-                    <span class="block text-xs text-gray-400 font-medium">Designation / Corporate Role</span>
-                    <span class="text-gray-700 text-sm font-medium">${item.designation || item.jobTitle || 'N/A'}</span>
-                </div>
-                <div>
-                    <span class="block text-xs text-gray-400 font-medium">Authorized Contact Phone Number</span>
+                    <span class="block text-xs text-gray-400">Authorized Phone</span>
                     <span class="text-blue-600 font-mono font-medium">${item.phone || 'N/A'}</span>
                 </div>
                 <div>
-                    <span class="block text-xs text-gray-400 font-medium">Official Corporate Email Address</span>
-                    <span class="text-blue-600 underline font-medium text-sm break-all">${item.email || 'N/A'}</span>
-                </div>
-                <div>
-                    <span class="block text-xs text-gray-400 font-medium">Industry Vertical / Sector Type</span>
-                    <span class="text-gray-700 text-sm font-medium">${item.industryType || item.industry || 'N/A'}</span>
+                    <span class="block text-xs text-gray-400">Official Email</span>
+                    <span class="text-blue-600 underline break-all">${item.email || 'N/A'}</span>
                 </div>
                 <div class="md:col-span-2">
-                    <span class="block text-xs text-gray-400 font-medium">Operational Location / Site Physical Address</span>
-                    <span class="text-gray-700 text-sm font-medium">${item.location || item.address || item.city || 'N/A'}</span>
+                    <span class="block text-xs text-gray-400">Location Address</span>
+                    <span class="text-gray-700 font-medium">${item.location || item.address || item.city || 'N/A'}</span>
                 </div>
             </div>
         </div>
 
         <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">2. Staffing Request & Target Specifications</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">2. Staffing Request Targets</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100 text-sm">
                 <div>
-                    <span class="block text-xs text-gray-400 font-medium">Primary Requirement Profile / Role Requested</span>
-                    <span class="bg-blue-50 text-blue-800 font-bold px-2 py-0.5 rounded text-sm mt-0.5 inline-block border border-blue-200">
+                    <span class="block text-xs text-gray-400">Role Requested</span>
+                    <span class="bg-blue-50 text-blue-800 font-bold px-2 py-0.5 rounded text-xs mt-0.5 inline-block border border-blue-200">
                         ${item.requirementType || item.role || item.servicesNeeded || 'N/A'}
                     </span>
                 </div>
                 <div>
-                    <span class="block text-xs text-gray-400 font-medium">Headcount Volume Required (Staff Count)</span>
-                    <span class="text-gray-800 font-bold text-base block mt-0.5">${item.numberOfStaff || item.staffCount || 0} Pax</span>
+                    <span class="block text-xs text-gray-400">Headcount Staff Volume</span>
+                    <span class="text-gray-800 font-bold block">${item.numberOfStaff || item.staffCount || 0} Pax</span>
                 </div>
                 <div>
-                    <span class="block text-xs text-gray-400 font-medium">Deployment Timeline Constraint</span>
-                    <span class="text-gray-700 text-sm font-semibold">${item.timeline || item.expectedStartDate || 'N/A'}</span>
+                    <span class="block text-xs text-gray-400">Deployment Timeline</span>
+                    <span class="text-gray-700 font-semibold">${item.timeline || item.expectedStartDate || 'N/A'}</span>
                 </div>
                 <div>
-                    <span class="block text-xs text-gray-400 font-medium">Proposed Budget Bracket / Salary Structure Offer</span>
-                    <span class="text-gray-700 text-sm font-medium font-mono">${item.budget || item.salaryOffered || item.budgetRange || 'Negotiable / Undisclosed'}</span>
-                </div>
-                <div>
-                    <span class="block text-xs text-gray-400 font-medium">Shift Arrangements Metric</span>
-                    <span class="text-gray-700 text-sm font-medium">${item.shiftType || item.shiftTimings || 'Standard Operations'}</span>
-                </div>
-                <div>
-                    <span class="block text-xs text-gray-400 font-medium">Job Mode Context</span>
-                    <span class="text-gray-700 text-sm font-medium">${item.jobType || item.employmentType || 'Full-Time Contract'}</span>
+                    <span class="block text-xs text-gray-400">Proposed Budget / Salary Structure</span>
+                    <span class="text-gray-700 font-mono">${item.budget || item.salaryOffered || item.budgetRange || 'Negotiable'}</span>
                 </div>
                 ${computedServicesHtml ? `
                 <div class="md:col-span-2">
-                    <span class="block text-xs text-gray-400 font-medium mb-1.5">Ancillary Services / Cross-Functional Selection Tags</span>
-                    <div class="flex flex-wrap gap-2">${computedServicesHtml}</div>
+                    <span class="block text-xs text-gray-400 mb-1">Cross Functional Selection Tags</span>
+                    <div class="flex flex-wrap gap-1.5">${computedServicesHtml}</div>
                 </div>` : ''}
             </div>
         </div>
 
-        <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">3. Administrative Alignment & Lifecycle Status</h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                <div>
-                    <span class="block text-xs text-gray-400 font-medium">Lifecycle Status Tracker</span>
-                    <span class="inline-block border text-xs font-bold px-2.5 py-0.5 rounded mt-1 uppercase ${getStatusColor(item.status)}">${item.status || 'New'}</span>
-                </div>
-                <div>
-                    <span class="block text-xs text-gray-400 font-medium">Priority Ranking Metric</span>
-                    <span class="inline-block border text-xs font-bold px-2.5 py-0.5 rounded mt-1 uppercase ${getPriorityColor(item.priority)}">${item.priority || 'Cold'}</span>
-                </div>
-                <div>
-                    <span class="block text-xs text-gray-400 font-medium">Internal Assigned Account Manager</span>
-                    <span class="text-gray-800 font-semibold block mt-1 text-sm"><span class="text-gray-400">👤</span> ${item.assignedTo || 'Unassigned Team'}</span>
-                </div>
-                <div class="md:col-span-3 border-t pt-3 mt-1">
-                    <span class="block text-xs text-gray-400 font-medium">Next Dedicated Account Follow-Up Action Date</span>
-                    <span class="text-gray-700 text-sm font-semibold block mt-0.5">
-                        📅 ${item.followUpDate ? new Date(item.followUpDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'No Targeted Review Scheduled'}
-                    </span>
-                </div>
-            </div>
-        </div>
-
         <div class="space-y-2">
-            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">4. Extended Form Message / Special Requirements & Notes</h4>
-            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl text-gray-700 text-sm italic whitespace-pre-line leading-relaxed shadow-inner">
-                ${item.notes || item.message || item.comments || item.requirementDetails || 'No additional custom message details or tailored operational criteria remarks were supplied in the form input field by the client contact.'}
+            <h4 class="text-xs font-bold uppercase text-blue-600 tracking-wider border-b pb-1">3. Special Requirements & Notes</h4>
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-gray-700 text-sm italic whitespace-pre-line leading-relaxed">
+                ${item.notes || item.message || item.comments || item.requirementDetails || 'No custom tailored metrics notes provided.'}
             </div>
         </div>
     `;
 
-    // Display overlay wrapper
     document.getElementById("detailsModal").classList.remove("hidden");
 }
 
@@ -442,17 +422,11 @@ function closeModal() {
     document.getElementById("detailsModal").classList.add("hidden");
 }
 
-// Global interface closing listener when target canvas interaction occurs outside layout windows
 window.onclick = function(event) {
     const modal = document.getElementById("detailsModal");
-    if (event.target === modal) {
-        closeModal();
-    }
+    if (event.target === modal) closeModal();
 }
 
-// =======================
-// TABLE STREAM FILTERS
-// =======================
 function filterTable() {
     const search = document.getElementById("companySearch").value.toLowerCase();
     const role = document.getElementById("roleFilter").value.toLowerCase();
@@ -466,40 +440,26 @@ function filterTable() {
 
         const matchSearch = comp.includes(search) || contact.includes(search) || mail.includes(search) || phone.includes(search);
         const matchRole = (role === "" || requirement.includes(role));
-
         return matchSearch && matchRole;
     });
 
     renderTable(filtered);
 }
 
-// =======================
-// REMOVE ROW DATA
-// =======================
 async function deleteRow(id) {
-    if (!confirm("Are you absolutely sure you want to drop this client enquiry lead from CRM tracking records?")) return;
-
-    await fetch(`${API_BASE}/client-enquiries/${id}`, {
-        method: "DELETE"
-    });
-
+    if (!confirm("Are you sure you want to drop this record?")) return;
+    await fetch(`${API_BASE}/client-enquiries/${id}`, { method: "DELETE" });
     loadEnquiries();
 }
 
-// =======================
-// MUTATION ACTION WRAPPERS
-// =======================
 async function updateStatus(id, status) {
     await fetch(`${API_BASE}/client-enquiries/${id}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status })
     });
-    
-    // Memory Cache Update to mirror transformations inside subsequent popups instantly
     const index = enquiriesData.findIndex(d => d._id === id);
     if(index !== -1) enquiriesData[index].status = status;
-    
     loadEnquiries();
 }
 
@@ -509,9 +469,9 @@ async function updatePriority(id, priority) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ priority })
     });
-
     const index = enquiriesData.findIndex(d => d._id === id);
     if(index !== -1) enquiriesData[index].priority = priority;
+    renderTable(enquiriesData);
 }
 
 async function assignRecruiter(id, assignedTo) {
@@ -520,9 +480,9 @@ async function assignRecruiter(id, assignedTo) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ assignedTo })
     });
-
     const index = enquiriesData.findIndex(d => d._id === id);
     if(index !== -1) enquiriesData[index].assignedTo = assignedTo;
+    renderTable(enquiriesData);
 }
 
 async function updateFollowUp(id, followUpDate) {
@@ -531,50 +491,31 @@ async function updateFollowUp(id, followUpDate) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ followUpDate })
     });
-
     const index = enquiriesData.findIndex(d => d._id === id);
     if(index !== -1) enquiriesData[index].followUpDate = followUpDate;
-    
     updateStats(enquiriesData);
+    renderTable(enquiriesData);
 }
 
-// =======================
-// DATA STREAM EXPORT ENGINE
-// =======================
 function exportCSV() {
     let csv = "Company,Contact,Phone,Email,Role,StaffCount,Location,Timeline,Status,Priority,Assigned\n";
-
     enquiriesData.forEach(item => {
-        const cName = item.companyName || item.organization || '';
-        const pName = item.contactPerson || item.fullName || item.name || '';
-        const req = item.requirementType || item.role || item.servicesNeeded || '';
-        const qty = item.numberOfStaff || item.staffCount || 0;
-        const loc = item.location || item.address || '';
-
-        csv += `"${cName}","${pName}","${item.phone || ''}","${item.email || ''}","${req}","${qty}","${loc}","${item.timeline || ''}","${item.status || ''}","${item.priority || ''}","${item.assignedTo || ''}"\n`;
+        csv += `"${item.companyName||''}","${item.contactPerson||''}","${item.phone||''}","${item.email||''}","${item.role||''}","${item.numberOfStaff||0}","${item.location||''}","${item.timeline||''}","${item.status||''}","${item.priority||''}","${item.assignedTo||''}"\n`;
     });
-
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
     a.href = url;
     a.download = `staffnexa-leads-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
 }
 
-// =======================
-// TERMINATE DEPLOYMENT SESSION
-// =======================
 function logout() {
     localStorage.removeItem("clientAuth");
     window.location.href = "index.html";
 }
 
-// INITIAL START INVOCATION
 loadEnquiries();
-
 </script>
-
 </body>
 </html>
